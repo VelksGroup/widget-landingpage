@@ -72,8 +72,6 @@
   }
   .pain-card:hover, .pain-card:active {
     animation: strongPulseBorder 0.5s infinite alternate !important;
-    z-index: 20;
-    position: relative;
   }
 }
 
