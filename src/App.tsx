@@ -169,7 +169,8 @@ function TiltCard({ children, className = '', glowColor = 'rgba(255,255,255,0.2)
       ref={cardRef}
       className={`relative rounded-2xl ease-out transition-transform duration-200 ${className}`}
       style={{
-        transform: isHovered ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)` : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
+        transformStyle: 'preserve-3d',
+        transform: isHovered ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)` : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
         zIndex: isHovered ? 50 : 1,
       }}
       onMouseMove={handleMouseMove}
@@ -185,7 +186,7 @@ function TiltCard({ children, className = '', glowColor = 'rgba(255,255,255,0.2)
           zIndex: 10,
         }}
       />
-      <div className="w-full h-full relative">
+      <div className="w-full h-full relative" style={{ transform: 'translateZ(40px)', transformStyle: 'preserve-3d' }}>
         {children}
       </div>
     </div>
@@ -198,34 +199,34 @@ function VSLHeroScene() {
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         
         {/* Mobile-first: Text content above video on small screens, beside it on desktop */}
-        <div className="flex flex-col z-10 w-full order-1 lg:order-1 pt-6 lg:pt-0">
-          <div className="inline-flex items-center gap-3 px-4 py-2 border border-brand-cyan/20 bg-brand-cyan/5 w-max backdrop-blur-md rounded-none mb-6">
+        <div className="flex flex-col space-y-6 z-10 w-full order-1 lg:order-1 pt-6 lg:pt-0">
+          <div className="inline-flex items-center gap-3 px-4 py-2 border border-brand-cyan/20 bg-brand-cyan/5 w-max backdrop-blur-md rounded-none">
             <div className="w-1.5 h-1.5 bg-brand-cyan animate-pulse box-glow-cyan"></div>
             <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-white">VELKS.SPACE · DEMO PRIVADA</span>
           </div>
           
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter text-white leading-[1] drop-shadow-2xl mb-6">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter text-white leading-[1] drop-shadow-2xl">
             O cliente <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-blue-400">quente</span><br/> não espera.
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-light max-w-lg leading-snug lg:leading-relaxed mb-6">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-light max-w-lg leading-snug lg:leading-relaxed">
             Quando ele entra no teu site, tens poucos segundos para responder antes que ele vá para o concorrente.
           </p>
 
-          <div className="border-l-[3px] border-brand-cyan pl-4 py-1 mb-6">
+          <div className="border-l-[3px] border-brand-cyan pl-4 py-1 my-2">
              <p className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#00e5ff] font-bold">
                Este sistema entra nesse momento.
              </p>
           </div>
           
           {/* Assiste message */}
-          <div className="bg-black/40 backdrop-blur-md border border-white/10 p-4 w-full max-w-md hidden lg:block mb-6">
+          <div className="bg-black/40 backdrop-blur-md border border-white/10 p-4 w-full max-w-md hidden lg:block mt-4">
              <p className="text-white text-sm font-light leading-relaxed">
                Assiste à demo.<br/> Em menos de 60 segundos vais perceber onde estás a perder clientes.
              </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4 mt-2">
             <div className="relative w-full sm:w-auto group/btn">
               <div className="absolute inset-0 bg-brand-cyan/60 blur-lg rounded opacity-50 group-hover/btn:opacity-100 transition-opacity duration-500 animate-[pulse_3s_ease-in-out_infinite]"></div>
               <button onClick={handleMainCtaClick} className="relative w-full sm:w-auto px-10 py-5 bg-brand-cyan text-black font-bold uppercase tracking-widest text-sm hover:bg-white transition-all duration-500 hover:-translate-y-1 shadow-[0_0_20px_rgba(0,229,255,0.4)] group-hover/btn:shadow-[0_0_40px_rgba(0,229,255,0.8)] flex items-center justify-center gap-3">
@@ -307,25 +308,24 @@ function PainScene() {
             </p>
           </div>
 
-          <div className="pain-cards-container grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 z-10 lg:ml-8">
+          <div className="pain-cards-container grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 z-10 lg:ml-8" style={{ perspective: '2000px' }}>
              {[
                { title: "Resposta lenta", result: "Interesse frio" },
                { title: "Site parado", result: "Cliente perdido" },
                { title: "Mensagem solta", result: "Sem contexto" },
                { title: "Equipa ocupada", result: "Venda escapando" }
              ].map((card, i) => (
-               <div key={i} className="pain-card-animate">
-                 <TiltCard
-                   className="pain-card group cursor-pointer border border-[#ff3366]/30 bg-[#ff3366]/5 backdrop-blur-[40px] flex flex-col justify-center min-h-[120px] sm:min-h-[160px] shadow-[0_0_50px_rgba(255,0,60,0.15)_inset]"
-                   glowColor="rgba(255,0,60,0.8)"
-                 >
-                   <div className="p-5 sm:p-8 h-full w-full flex flex-col justify-center">
-                     <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-[#ff3366] opacity-90 mb-3 sm:mb-4 group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_20px_rgba(255,51,102,1)]" />
-                     <p className="text-white font-mono text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-1 sm:mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">{card.title}</p>
-                     <p className="text-[#ff3366] font-black text-lg sm:text-2xl tracking-tighter leading-none drop-shadow-[0_0_15px_rgba(255,51,102,0.8)]">{card.result}</p>
-                   </div>
-                 </TiltCard>
-               </div>
+               <TiltCard
+                 key={i} 
+                 className="pain-card pain-card-animate group cursor-pointer border border-[#ff3366]/30 bg-[#ff3366]/5 backdrop-blur-[40px] flex flex-col justify-center min-h-[120px] sm:min-h-[160px] shadow-[0_0_50px_rgba(255,0,60,0.15)_inset]"
+                 glowColor="rgba(255,0,60,0.8)"
+               >
+                 <div className="p-5 sm:p-8 h-full w-full flex flex-col justify-center">
+                   <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-[#ff3366] opacity-90 mb-3 sm:mb-4 group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_20px_rgba(255,51,102,1)]" style={{ transform: 'translateZ(30px)' }} />
+                   <p className="text-white font-mono text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-1 sm:mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" style={{ transform: 'translateZ(20px)' }}>{card.title}</p>
+                   <p className="text-[#ff3366] font-black text-lg sm:text-2xl tracking-tighter leading-none drop-shadow-[0_0_15px_rgba(255,51,102,0.8)]" style={{ transform: 'translateZ(40px)' }}>{card.result}</p>
+                 </div>
+               </TiltCard>
              ))}
              
              <div className="col-span-1 sm:col-span-2 mt-4 sm:mt-6 flex justify-center sm:justify-end" style={{ transform: 'translateZ(20px)' }}>
@@ -366,29 +366,25 @@ function MechanismScene() {
            </div>
         </div>
 
-        <div className="mechanism-container lg:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full z-10">
+        <div className="mechanism-container lg:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full z-10" style={{ perspective: '2000px' }}>
            {[
              { title: "ABORDA", desc: "O visitante recebe atenção absoluta antes de sair.", icon: <Activity className="w-6 h-6 text-[#00e5ff]" /> },
              { title: "QUALIFICA", desc: "O sistema entende a intenção exata da busca.", icon: <Crosshair className="w-6 h-6 text-[#00e5ff]" /> },
              { title: "ORGANIZA", desc: "A conversa caótica vira um dossiê perfeito.", icon: <Network className="w-6 h-6 text-[#00e5ff]" /> },
              { title: "ENTREGA", desc: "Recebes tudo no email: pronto para o fecho.", icon: <Mail className="w-6 h-6 text-[#00e5ff]" /> }
            ].map((step, i) => (
-             <div key={i} className="mechanism-step-animate h-full">
-               <TiltCard className="group border border-[#00e5ff]/40 bg-[#00e5ff]/5 backdrop-blur-[40px] shadow-[0_0_40px_rgba(0,229,255,0.15)_inset] overflow-hidden min-h-[300px]" glowColor="rgba(0,229,255,0.6)">
-                 <div className="p-6 sm:p-8 h-full w-full relative flex flex-col justify-between">
-                   <div className="absolute -top-10 -right-10 text-[140px] font-mono font-black text-white/10 group-hover:text-[#00e5ff]/10 transition-colors duration-500 z-0 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                     0{i+1}
-                   </div>
-                   <div className="w-14 h-14 border-2 border-[#00e5ff]/60 bg-[#00e5ff]/20 flex items-center justify-center mb-6 relative z-10 rounded-xl shadow-[0_0_30px_rgba(0,229,255,0.5)]">
-                     {step.icon}
-                   </div>
-                   <div>
-                     <h4 className="text-white text-3xl font-black tracking-tight mb-3 relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]">{step.title}</h4>
-                     <p className="text-white font-bold text-base md:text-lg leading-relaxed relative z-10 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">{step.desc}</p>
-                   </div>
+             <TiltCard key={i} className="mechanism-step-animate group border border-[#00e5ff]/40 bg-[#00e5ff]/5 backdrop-blur-[40px] shadow-[0_0_40px_rgba(0,229,255,0.15)_inset] overflow-hidden" glowColor="rgba(0,229,255,0.6)">
+               <div className="p-6 sm:p-8 h-full w-full relative">
+                 <div className="absolute -top-10 -right-10 text-[140px] font-mono font-black text-white/10 group-hover:text-[#00e5ff]/10 transition-colors duration-500 z-0 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                   0{i+1}
                  </div>
-               </TiltCard>
-             </div>
+                 <div className="w-14 h-14 border-2 border-[#00e5ff]/60 bg-[#00e5ff]/20 flex items-center justify-center mb-6 relative z-10 rounded-xl shadow-[0_0_30px_rgba(0,229,255,0.5)]" style={{ transform: 'translateZ(30px)' }}>
+                   {step.icon}
+                 </div>
+                 <h4 className="text-white text-3xl font-black tracking-tight mb-3 relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]" style={{ transform: 'translateZ(40px)' }}>{step.title}</h4>
+                 <p className="text-white font-bold text-base md:text-lg leading-relaxed relative z-10 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" style={{ transform: 'translateZ(20px)' }}>{step.desc}</p>
+               </div>
+             </TiltCard>
            ))}
         </div>
 
@@ -552,7 +548,7 @@ export default function App() {
       <CustomCursor />
       <TopNav />
       <BackgroundCanvas />
-      <main id="main-scroll-container" className="relative w-full font-sans text-white pb-10 mix-blend-normal z-10" ref={mainRef}>
+      <main id="main-scroll-container" className="relative w-full overflow-hidden font-sans text-white pb-10 mix-blend-normal z-10" ref={mainRef}>
         <VSLHeroScene />
         <PainScene />
         <MechanismScene />
