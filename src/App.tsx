@@ -452,28 +452,24 @@ export default function App() {
       sections.forEach((sec, index) => {
         if (index === 0) return; // Skip hero
 
-        // Create a surreal entrance wrapper effect (Scaling, rotating, unblurring from depth)
-        gsap.fromTo(sec, 
+        // Create a surreal entrance wrapper effect but ONLY on the child container to avoid trigger bugs
+        gsap.fromTo(sec.children, 
           { 
-            scale: 0.8,
-            rotationX: 15,
-            y: 200,
+            y: 50,
             opacity: 0,
-            filter: "blur(20px) contrast(150%)",
+            filter: "blur(10px)",
           }, 
           { 
-            scale: 1,
-            rotationX: 0,
             y: 0,
             opacity: 1, 
-            filter: "blur(0px) contrast(100%)",
-            duration: 2, 
+            filter: "blur(0px)",
+            duration: 1.5, 
             ease: "expo.out",
             scrollTrigger: {
               trigger: sec,
-              start: "top 90%",
+              start: "top 85%",
               end: "top 40%",
-              scrub: 1.5,
+              scrub: 1,
             }
           }
         );
@@ -531,12 +527,17 @@ export default function App() {
         ease: 'none',
         transformOrigin: "left",
         scrollTrigger: {
-          trigger: document.body,
+          trigger: mainRef.current,
           start: 'top top',
           end: 'bottom bottom',
           scrub: true,
         }
       });
+
+      // Recalculate ScrollTrigger once everything is mounted
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 500);
     }, mainRef);
 
     return () => ctx.revert();
@@ -548,7 +549,7 @@ export default function App() {
       <CustomCursor />
       <TopNav />
       <BackgroundCanvas />
-      <main id="main-scroll-container" className="relative w-full overflow-hidden font-sans text-white pb-10 mix-blend-normal z-10" ref={mainRef}>
+      <main id="main-scroll-container" className="relative w-full overflow-x-clip font-sans text-white pb-10 mix-blend-normal z-10" ref={mainRef}>
         <VSLHeroScene />
         <PainScene />
         <MechanismScene />
