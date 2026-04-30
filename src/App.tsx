@@ -228,12 +228,12 @@ function VSLHeroScene() {
           </div>
           
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-black tracking-tighter text-white leading-[1.1] drop-shadow-2xl uppercase">
-            SEU ASSISTENTE DE IA - <br className="hidden lg:block"/>
+            SEU ASSISTENTE DE IA <br className="hidden lg:block"/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff88] to-[#00ffa6] drop-shadow-[0_0_15px_rgba(0,255,136,0.5)]">ORION 24H 7/7</span>
           </h1>
           
           <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-light max-w-2xl leading-snug lg:leading-relaxed">
-            Rececionista de IA que atende, qualifica e converte clientes <span className="text-[#00ff88] font-bold">24 horas por dia</span> — para você ter mais tempo, mais vendas e menos stress.
+            AGENTE de IA que atende, qualifica e converte clientes <span className="text-[#00ff88] font-bold">24 horas por dia</span> — para você ter mais tempo, mais vendas e menos stress.
           </p>
 
           <div className="border-l-[3px] border-[#00ff88] pl-4 py-1 my-2">
@@ -381,7 +381,7 @@ function MechanismScene() {
            </h2>
            
            <p className="text-2xl md:text-3xl text-white/90 font-light mb-10 leading-snug drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-             Enquanto a tua equipa trabalha, o sistema aborda, qualifica e envia o cliente pronto para ti.
+             Enquanto a tua equipa trabalha, este sistema aborda, qualifica e envia o cliente pronto para ti.
            </p>
            
            <div className="p-6 bg-white/5 border border-white/20 border-l-[4px] border-l-[#00e5ff] backdrop-blur-[30px] rounded-r-xl shadow-[0_0_40px_rgba(0,229,255,0.1)_inset]">
@@ -396,7 +396,7 @@ function MechanismScene() {
              { title: "ABORDA", desc: "O visitante recebe atenção absoluta antes de sair.", icon: <Activity className="w-6 h-6 text-[#00e5ff]" /> },
              { title: "QUALIFICA", desc: "O sistema entende a intenção exata da busca.", icon: <Crosshair className="w-6 h-6 text-[#00e5ff]" /> },
              { title: "ORGANIZA", desc: "A conversa caótica vira um dossiê perfeito.", icon: <Network className="w-6 h-6 text-[#00e5ff]" /> },
-             { title: "ENTREGA", desc: "Recebes tudo no email: pronto para o fecho.", icon: <Mail className="w-6 h-6 text-[#00e5ff]" /> }
+             { title: "ENTREGA", desc: "Recebes tudo no e-mail: pronto para o fecho.", icon: <Mail className="w-6 h-6 text-[#00e5ff]" /> }
            ].map((step, i) => (
              <TiltCard key={i} className="mechanism-step-animate group border border-[#00e5ff]/40 bg-[#00e5ff]/5 backdrop-blur-[40px] shadow-[0_0_40px_rgba(0,229,255,0.15)_inset] overflow-hidden" glowColor="rgba(0,229,255,0.6)">
                <div className="p-6 sm:p-8 h-full w-full relative">
