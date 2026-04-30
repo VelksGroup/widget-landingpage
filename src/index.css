@@ -25,6 +25,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
 }
 
 @media (pointer: fine) {
@@ -103,6 +108,32 @@
     background-color: rgba(255, 0, 0, 0.15); /* flash interior */
     transform: scale(1.02); /* aggressive scaling */
   }
+}
+
+@keyframes floatAggressive {
+  0%, 100% { transform: translateY(0) scale(1) rotate(-1deg); }
+  50% { transform: translateY(-20px) scale(1.02) rotate(1deg); }
+}
+
+@keyframes floatAggressiveAlt {
+  0%, 100% { transform: translateY(-10px) scale(1.01) rotate(1deg); }
+  50% { transform: translateY(10px) scale(0.99) rotate(-1deg); }
+}
+
+@keyframes cyberGlow {
+  0% { box-shadow: 0 0 30px rgba(204, 0, 255, 0.3), inset 0 0 20px rgba(204, 0, 255, 0.1); border-color: rgba(204, 0, 255, 0.5); }
+  50% { box-shadow: 0 0 70px rgba(0, 255, 204, 0.6), inset 0 0 40px rgba(0, 255, 204, 0.3); border-color: rgba(0, 255, 204, 0.9); }
+  100% { box-shadow: 0 0 30px rgba(204, 0, 255, 0.3), inset 0 0 20px rgba(204, 0, 255, 0.1); border-color: rgba(204, 0, 255, 0.5); }
+}
+
+.cyber-card-0 {
+  animation: floatAggressive 6s ease-in-out infinite, cyberGlow 4s ease-in-out infinite;
+}
+.cyber-card-1 {
+  animation: floatAggressiveAlt 7s ease-in-out infinite 1s, cyberGlow 5s ease-in-out infinite 1s;
+}
+.cyber-card-2 {
+  animation: floatAggressive 8s ease-in-out infinite 2s, cyberGlow 3s ease-in-out infinite 2s;
 }
 
 /* Luxury scrollbar */

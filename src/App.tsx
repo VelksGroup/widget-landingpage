@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BackgroundCanvas from './components/BackgroundCanvas';
 import CustomCursor from './components/CustomCursor';
-import { Play, ArrowUpRight, AlertTriangle, ChevronRight, Activity, Crosshair, Network, Mail, Globe } from 'lucide-react';
+import { Play, ArrowUpRight, AlertTriangle, ChevronRight, Activity, Crosshair, Network, Mail, Globe, Lock, Linkedin, Instagram, Facebook } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -18,6 +18,28 @@ const handleMainCtaClick = () => {
 const handleSecondaryCtaClick = () => {
   window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 };
+
+function PromoBanner() {
+  return (
+    <div className="relative w-full bg-black/80 backdrop-blur-md border-b justify-center flex overflow-hidden border-[#ff003c]/40 text-white text-[10px] sm:text-xs font-black tracking-widest uppercase py-2.5 sm:py-3 z-[200]">
+      <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite] sm:animate-none sm:justify-center items-center gap-4 sm:gap-6 min-w-full">
+        <span className="text-[#ff003c] animate-pulse">⚡ PROMOÇÃO LIMITADA</span>
+        <span className="hidden sm:inline opacity-30">/</span>
+        <span>SETUP COMPLETO POR <span className="line-through opacity-50 px-1 font-normal">397€</span> 297€</span>
+        <span className="hidden sm:inline opacity-30">/</span>
+        <span className="text-[#ffaa00]">GANHE 2 MESES DE MENSALIDADE GRÁTIS</span>
+        <span className="hidden sm:inline opacity-30">/</span>
+        <span>VAGAS LIMITADAS ⏳</span>
+        
+        {/* Repeat for continuous marquee on mobile */}
+        <span className="sm:hidden text-[#ff003c] animate-pulse ml-8">⚡ PROMOÇÃO LIMITADA</span>
+        <span className="sm:hidden">SETUP COMPLETO POR <span className="line-through opacity-50 px-1 font-normal">397€</span> 297€</span>
+        <span className="sm:hidden text-[#ffaa00]">GANHE 2 MESES DE MENSALIDADE GRÁTIS</span>
+        <span className="sm:hidden">VAGAS LIMITADAS ⏳</span>
+      </div>
+    </div>
+  );
+}
 
 // Custom Seals Component
 const SealsRow = () => {
@@ -108,11 +130,11 @@ function TopNav() {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex justify-end pointer-events-none">
+    <div className="absolute top-[50px] right-4 sm:right-6 z-[90] flex justify-end pointer-events-none">
       {/* Hidden original widget */}
       <div id="google_translate_element" className="hidden"></div>
       
-      <div className="pointer-events-auto flex items-center gap-1.5 bg-[#11001a]/80 backdrop-blur-xl border border-white/10 p-2 transition-all shadow-[0_0_20px_rgba(204,0,255,0.15)] rounded-[20px]">
+      <div className="pointer-events-auto flex items-center gap-1.5 bg-black/80 backdrop-blur-xl border border-white/20 p-2 transition-all shadow-[0_0_30px_rgba(0,0,0,0.8)] rounded-full">
         {LANGUAGES.map((lang) => (
           <button
             key={lang.code}
@@ -200,22 +222,23 @@ function VSLHeroScene() {
         
         {/* Mobile-first: Text content above video on small screens, beside it on desktop */}
         <div className="flex flex-col space-y-6 z-10 w-full order-1 lg:order-1 pt-6 lg:pt-0">
-          <div className="inline-flex items-center gap-3 px-4 py-2 border border-brand-cyan/20 bg-brand-cyan/5 w-max backdrop-blur-md rounded-none">
-            <div className="w-1.5 h-1.5 bg-brand-cyan animate-pulse box-glow-cyan"></div>
-            <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-white">VELKS.SPACE · DEMO PRIVADA</span>
+          <div className="inline-flex items-center gap-3 px-4 py-2 border border-[#00ff88]/30 bg-[#00ff88]/10 w-max backdrop-blur-md rounded-none">
+            <div className="w-1.5 h-1.5 bg-[#00ff88] animate-pulse"></div>
+            <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#00ff88]">VELKS.SPACE · DEMO PRIVADA</span>
           </div>
           
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter text-white leading-[1] drop-shadow-2xl">
-            O cliente <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-blue-400">quente</span><br/> não espera.
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-black tracking-tighter text-white leading-[1.1] drop-shadow-2xl uppercase">
+            SEU ASSISTENTE DE IA - <br className="hidden lg:block"/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff88] to-[#00ffa6] drop-shadow-[0_0_15px_rgba(0,255,136,0.5)]">ORION 24H 7/7</span>
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-light max-w-lg leading-snug lg:leading-relaxed">
-            Quando ele entra no teu site, tens poucos segundos para responder antes que ele vá para o concorrente.
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-light max-w-2xl leading-snug lg:leading-relaxed">
+            Rececionista de IA que atende, qualifica e converte clientes <span className="text-[#00ff88] font-bold">24 horas por dia</span> — para você ter mais tempo, mais vendas e menos stress.
           </p>
 
-          <div className="border-l-[3px] border-brand-cyan pl-4 py-1 my-2">
-             <p className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#00e5ff] font-bold">
-               Este sistema entra nesse momento.
+          <div className="border-l-[3px] border-[#00ff88] pl-4 py-1 my-2">
+             <p className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#00ff88] font-bold drop-shadow-[0_0_5px_rgba(0,255,136,0.3)]">
+               Este sistema entra no momento exato em que há interesse.
              </p>
           </div>
           
@@ -225,19 +248,19 @@ function VSLHeroScene() {
                Assiste à demo.<br/> Em menos de 60 segundos vais perceber onde estás a perder clientes.
              </p>
           </div>
-
+          
           <div className="flex flex-col sm:flex-row gap-4 pt-4 mt-2">
             <div className="relative w-full sm:w-auto group/btn">
-              <div className="absolute inset-0 bg-brand-cyan/60 blur-lg rounded opacity-50 group-hover/btn:opacity-100 transition-opacity duration-500 animate-[pulse_3s_ease-in-out_infinite]"></div>
-              <button onClick={handleMainCtaClick} className="relative w-full sm:w-auto px-10 py-5 bg-brand-cyan text-black font-bold uppercase tracking-widest text-sm hover:bg-white transition-all duration-500 hover:-translate-y-1 shadow-[0_0_20px_rgba(0,229,255,0.4)] group-hover/btn:shadow-[0_0_40px_rgba(0,229,255,0.8)] flex items-center justify-center gap-3">
+              <div className="absolute inset-0 bg-[#00ff88]/40 blur-[20px] rounded opacity-50 group-hover/btn:opacity-100 transition-opacity duration-500 animate-[pulse_3s_ease-in-out_infinite]"></div>
+              <button onClick={handleSecondaryCtaClick} className="relative w-full sm:w-auto px-10 py-5 bg-[#00ff88] text-black font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-all duration-500 hover:-translate-y-1 shadow-[0_0_20px_rgba(0,255,136,0.4)] group-hover/btn:shadow-[0_0_40px_rgba(0,255,136,0.8)] flex items-center justify-center gap-3">
                 Quero implementar isto <ArrowUpRight className="w-5 h-5 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
               </button>
             </div>
             <button onClick={() => {
               const el = document.getElementById('demo-video-container');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }} className="w-full sm:w-auto px-8 py-5 bg-transparent border border-white/20 text-white font-mono text-sm uppercase tracking-widest hover:bg-white/10 transition-all duration-300">
-              Ver como funciona
+            }} className="w-full sm:w-auto px-8 py-5 bg-transparent border-2 border-[#00ff88]/50 text-[#00ff88] hover:text-black font-mono text-sm font-bold uppercase tracking-widest hover:bg-[#00ff88] transition-all duration-300 shadow-[0_0_15px_rgba(0,255,136,0.1)]">
+               Ver como funciona
             </button>
           </div>
           
@@ -246,7 +269,7 @@ function VSLHeroScene() {
 
         {/* Vertical Video Demo Hero - Centered and highlighted */}
         <div id="demo-video-container" className="relative w-full aspect-[9/16] max-w-[350px] sm:max-w-[400px] mx-auto lg:ml-auto lg:mr-0 z-20 order-2 lg:order-2 perspective-1000">
-           <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/30 via-transparent to-[#cc00ff]/30 blur-2xl -z-10 rounded-3xl"></div>
+           <div className="absolute inset-0 bg-gradient-to-br from-[#cc00ff]/30 via-transparent to-[#ff00a2]/30 blur-2xl -z-10 rounded-3xl"></div>
            
            <div className="w-full h-full glass-panel-light p-1 lg:p-2 rounded-2xl border border-white/20 shadow-2xl relative overflow-hidden group">
               {/* Vertical Video background */}
@@ -329,8 +352,10 @@ function PainScene() {
              ))}
              
              <div className="col-span-1 sm:col-span-2 mt-4 sm:mt-6 flex justify-center sm:justify-end" style={{ transform: 'translateZ(20px)' }}>
-               <button onClick={handleMainCtaClick} className="px-8 py-4 sm:py-5 bg-white/5 border border-white/20 text-white font-mono font-bold text-xs sm:text-sm uppercase tracking-[0.1em] hover:bg-[#ff003c] hover:border-[#ff003c] hover:shadow-[0_0_30px_rgba(255,0,60,0.6)] transition-all duration-500 backdrop-blur-xl rounded-lg w-full sm:w-auto">
-                  Parar de perder intenção →
+               <button onClick={handleSecondaryCtaClick} className="px-8 py-4 sm:py-5 bg-[#ff003c] border border-[#ff003c] text-white font-mono font-black text-sm sm:text-base uppercase tracking-[0.1em] shadow-[0_0_20px_rgba(255,0,60,0.6)] hover:bg-white hover:text-[#ff003c] hover:border-white hover:shadow-[0_0_40px_rgba(255,0,60,0.9)] hover:scale-105 hover:-translate-y-1 animate-pulse transition-all duration-500 backdrop-blur-xl rounded-lg w-full sm:w-auto group">
+                  <span className="flex items-center gap-2">
+                    Quero meu AGENTE DE IA <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
                </button>
              </div>
           </div>
@@ -393,6 +418,76 @@ function MechanismScene() {
   );
 }
 
+function TestimonialsScene() {
+  return (
+    <section id="scene-testimonials" className="relative w-full min-h-screen flex flex-col justify-center py-24 px-4 z-10 box-border overflow-hidden">
+      <div className="max-w-7xl mx-auto w-full z-10 flex flex-col pt-12">
+        <div className="text-center mb-24 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-32 bg-[#cc00ff]/20 blur-[100px] pointer-events-none rounded-full"></div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400 drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
+            A RECEPCIONISTA QUE FAZ TUDO.<br/> 
+            <span className="text-[#00ffcc] relative inline-block drop-shadow-[0_0_30px_rgba(0,255,204,0.6)] animate-pulse mt-2 md:text-7xl">
+              AGENTE DE VOZ COM IA
+              <span className="absolute -bottom-2 left-0 w-full h-1 bg-[#00ffcc] shadow-[0_0_15px_#00ffcc]"></span>
+            </span>
+          </h2>
+          <p className="font-mono text-[#00ffcc] bg-[#00ffcc]/10 border border-[#00ffcc]/30 p-4 sm:p-6 rounded-xl max-w-3xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed backdrop-blur-sm shadow-[0_0_30px_rgba(0,255,204,0.15)_inset]">
+            Muito mais que uma automação. O seu <b className="text-white drop-shadow-md">Agente de Voz ultra-realista</b> atua como um funcionário incansável que atende, qualifica e agenda 24/7, programado exclusivamente para <b className="text-white drop-shadow-md">MULTIPLICAR O SEU ROI</b> sem custos de contratação.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 justify-items-center w-full">
+          {[
+            {
+              name: "E-commerce & Saúde",
+              result: "Avatar de Suporte: +45% Agendamentos",
+              src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&h=711&q=80",
+            },
+            {
+              name: "Tech & Software",
+              result: "Avatar Inside Sales: Zero perda",
+              src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&h=711&q=80",
+            },
+            {
+              name: "Consultoria Digital",
+              result: "Avatar de Triagem: 24/7",
+              src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=711&q=80",
+            }
+          ].map((caseData, i) => (
+            <div key={i} className={`group relative w-full max-w-[320px] aspect-[9/16] rounded-2xl overflow-hidden bg-[#11001a] border-2 cursor-pointer transition-all duration-500 cyber-card-${i % 3}`}>
+               <img 
+                 src={caseData.src} 
+                 alt={caseData.name}
+                 className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 relative z-10 mix-blend-screen"
+               />
+               
+               {/* Cyber grid overlay */}
+               <div className="absolute inset-0 z-10 opacity-30 pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(0, 255, 204, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 204, 0.2) 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+               <div className="absolute top-4 right-4 z-20 bg-black/80 backdrop-blur-md rounded-full px-4 py-1.5 font-mono text-xs text-[#00ffcc] border border-[#00ffcc]/50 flex gap-2 items-center shadow-[0_0_15px_rgba(0,255,204,0.5)]">
+                 <span className="flex items-end gap-[2px] h-3">
+                    <span className="w-[3px] rounded-full bg-[#00ffcc] h-full animate-[pulse_0.8s_ease-in-out_infinite]"></span>
+                    <span className="w-[3px] rounded-full bg-[#00ffcc] h-2/3 animate-[pulse_1.2s_ease-in-out_infinite]"></span>
+                    <span className="w-[3px] rounded-full bg-[#00ffcc] h-full animate-[pulse_1s_ease-in-out_infinite]"></span>
+                    <span className="w-[3px] rounded-full bg-[#00ffcc] h-1/2 animate-[pulse_0.9s_ease-in-out_infinite]"></span>
+                 </span>
+                 <span className="text-[10px] uppercase font-bold text-[#00ffcc]">VOZ ATIVA</span>
+               </div>
+               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-10 transition-opacity duration-500 group-hover:opacity-80"></div>
+               <div className="absolute bottom-0 left-0 w-full p-6 z-20 flex flex-col gap-3 pointer-events-none transform group-hover:-translate-y-2 transition-transform duration-500">
+                 <div className="flex items-center gap-2 bg-black/50 w-max px-3 py-1.5 rounded-full border border-[#00ffcc]/30 backdrop-blur-sm">
+                   <div className="w-2 h-2 rounded-full bg-[#00ffcc] animate-pulse shadow-[0_0_10px_#00ffcc]"></div>
+                   <p className="font-mono text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold drop-shadow-md m-0">{caseData.name}</p>
+                 </div>
+                 <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_5px_15px_rgba(0,255,204,0.6)] leading-tight uppercase tracking-tight group-hover:text-[#00ffcc] transition-colors duration-300">{caseData.result}</h3>
+               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTAScene() {
   return (
     <section id="scene-4" className="relative w-full min-h-screen flex items-center justify-center py-24 px-4 z-10 text-center box-border overflow-hidden">
@@ -409,7 +504,7 @@ function CTAScene() {
          <TiltCard className="mb-12 w-full max-w-4xl" glowColor="rgba(255,170,0,0.6)">
            <div className="bg-black/50 backdrop-blur-[40px] border border-white/20 rounded-2xl p-6 sm:p-8 md:p-12 shadow-[0_0_100px_rgba(0,0,0,0.5)_inset,0_20px_40px_rgba(0,0,0,0.5)] h-full w-full">
              <p className="text-xl sm:text-2xl md:text-4xl font-light text-white mb-0 leading-relaxed" style={{ transform: 'translateZ(30px)', textShadow: '0 5px 15px rgba(0,0,0,1), 0 0 40px rgba(0,0,0,1)' }}>
-               Implementamos o <b className="text-[#ffcc00] font-black" style={{ textShadow: '0 4px 10px rgba(0,0,0,1)' }}>sistema quântico</b> no seu site para captar, qualificar e <i className="text-[#ffaa00]" style={{ textShadow: '0 4px 10px rgba(0,0,0,1)' }}>injetar</i> clientes no seu funil enquanto foca no operacional.
+               Instalamos o <b className="text-[#ffcc00] font-black" style={{ textShadow: '0 4px 10px rgba(0,0,0,1)' }}>sistema de IA</b> no seu site para captar, qualificar e <i className="text-[#ffaa00]" style={{ textShadow: '0 4px 10px rgba(0,0,0,1)' }}>injetar</i> clientes diretamente para o teu funil enquanto tu focas no operacional.
              </p>
            </div>
          </TiltCard>
@@ -418,7 +513,7 @@ function CTAScene() {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ffaa00]/20 to-transparent -translate-x-[200%] group-hover:translate-x-[200%] transition-transform duration-[2000ms] skew-x-12"></div>
             <p className="text-sm sm:text-2xl text-[#ffcc00] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] font-mono m-0 flex items-center justify-center gap-2 sm:gap-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,1)' }}>
               <span className="w-4 h-4 bg-[#ffaa00] rounded-full animate-ping"></span>
-               APENAS 2 VAGAS REAIS ESTA SEMANA
+               RESTAM APENAS 2 VAGAS ESTA SEMANA
             </p>
          </div>
 
@@ -432,6 +527,16 @@ function CTAScene() {
             </button>
          </div>
 
+         {/* Badges / Mentions */}
+         <div className="flex flex-wrap justify-center gap-4 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase mb-16 z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+            <div className="flex items-center gap-2 px-5 py-3 border-2 border-white bg-white text-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+              <span>🇪🇺</span> Made in EU
+            </div>
+            <div className="flex items-center gap-2 px-5 py-3 border-2 border-brand-cyan bg-brand-cyan text-black rounded-full shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+              <Lock className="w-4 h-4" /> Conformidade RGPD
+            </div>
+         </div>
+
          <div className="flex flex-col sm:flex-row divide-y justify-between sm:divide-y-0 sm:divide-x divide-white/20 border-y border-white/20 py-4 sm:py-8 opacity-100 w-full max-w-4xl text-center bg-black/50 backdrop-blur-xl rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
            <span className="font-mono text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest text-[#ffcc00] px-4 sm:px-8 py-3 sm:py-0" style={{ textShadow: '0 4px 15px rgba(0,0,0,1)' }}>Sem equipa extra</span>
            <span className="font-mono text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest text-[#ffcc00] px-4 sm:px-8 py-3 sm:py-0" style={{ textShadow: '0 4px 15px rgba(0,0,0,1)' }}>Sem resposta atrasada</span>
@@ -439,6 +544,54 @@ function CTAScene() {
          </div>
        </div>
     </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="w-full relative z-20 bg-black py-8 px-4 border-t border-white/10 overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl h-40 bg-brand-cyan/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 z-10 relative">
+        {/* Left: Logo & Address */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 lg:border-r border-white/10 lg:pr-8">
+            <img 
+              src="/velks-logo.png" 
+              alt="VELKS Group - Made in Luxembourg" 
+              className="h-12 sm:h-16 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" 
+            />
+            <div className="text-center sm:text-left font-mono text-xs text-gray-400 leading-tight lg:border-l-0 lg:pl-0 border-l border-white/20 pl-4">
+                <p>Avenue de la Gare</p>
+                <p>L-1611 Luxembourg</p>
+            </div>
+        </div>
+
+        {/* Center: Socials */}
+        <div className="flex gap-4 items-center justify-center">
+            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Linkedin size={18}/></a>
+            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg>
+            </a>
+            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Instagram size={18}/></a>
+            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Facebook size={18}/></a>
+            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Mail size={18}/></a>
+        </div>
+
+        {/* Right: Legal & Copyright stack */}
+        <div className="flex flex-col items-center md:items-end gap-2 text-center md:text-right text-[10px] font-mono text-gray-500">
+            <div className="flex flex-wrap justify-center md:justify-end gap-4">
+               <a href="#" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Termos Gerais</a>
+               <a href="#" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Privacidade</a>
+               <a href="#" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Avisos legais</a>
+            </div>
+            
+            <p className="text-gray-600 mt-2 uppercase tracking-wide">
+              © {new Date().getFullYear()} VELKS Group — Todos os direitos reservados ⊛
+            </p>
+        </div>
+      </div>
+    </footer>
   );
 }
 
@@ -534,27 +687,39 @@ export default function App() {
         }
       });
 
-      // Recalculate ScrollTrigger once everything is mounted
-      setTimeout(() => {
+      // Recalculate ScrollTrigger on interval and window load to handle external widgets
+      const refreshInterval = setInterval(() => {
         ScrollTrigger.refresh();
-      }, 500);
-    }, mainRef);
+      }, 1000);
+      
+      setTimeout(() => clearInterval(refreshInterval), 8000);
 
-    return () => ctx.revert();
+      const handleLoad = () => ScrollTrigger.refresh();
+      window.addEventListener('load', handleLoad);
+
+      return () => {
+        clearInterval(refreshInterval);
+        window.removeEventListener('load', handleLoad);
+        ctx.revert();
+      };
+    }, mainRef);
   }, []);
 
   return (
-    <>
-      <div className="progress-bar fixed top-0 left-0 h-1.5 bg-gradient-to-r from-[#00e5ff] via-[#cc00ff] to-[#ffaa00] w-full z-[100] scale-x-0 origin-left" />
+    <div className="relative w-full overflow-x-hidden min-h-screen bg-brand-dark">
+      <PromoBanner />
+      <div className="progress-bar fixed top-0 left-0 h-1.5 bg-gradient-to-r from-[#00e5ff] via-[#cc00ff] to-[#ffaa00] w-full z-[100] scale-x-0 origin-left mt-[44px] sm:mt-[40px]" />
       <CustomCursor />
       <TopNav />
       <BackgroundCanvas />
-      <main id="main-scroll-container" className="relative w-full overflow-x-clip font-sans text-white pb-10 mix-blend-normal z-10" ref={mainRef}>
+      <main id="main-scroll-container" className="relative w-full font-sans text-white mix-blend-normal z-10" ref={mainRef}>
         <VSLHeroScene />
         <PainScene />
         <MechanismScene />
+        <TestimonialsScene />
         <CTAScene />
       </main>
-    </>
+      <Footer />
+    </div>
   );
 }
