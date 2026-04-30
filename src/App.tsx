@@ -562,21 +562,21 @@ function Footer() {
 
         {/* Center: Socials */}
         <div className="flex gap-4 items-center justify-center">
-            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Linkedin size={18}/></a>
-            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full">
+            <a href="https://www.linkedin.com/company/velks-group/" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Linkedin size={18}/></a>
+            <a href="https://x.com/VelksGroup" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg>
             </a>
-            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Instagram size={18}/></a>
-            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Facebook size={18}/></a>
-            <a href="#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Mail size={18}/></a>
+            <a href="https://www.instagram.com/velksgroup" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Instagram size={18}/></a>
+            <a href="https://www.facebook.com/velksgroup#" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Facebook size={18}/></a>
+            <a href="mailto:contact@velksgroup.com" className="text-gray-500 hover:text-white transition-colors duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] rounded-full"><Mail size={18}/></a>
         </div>
 
         {/* Right: Legal & Copyright stack */}
         <div className="flex flex-col items-center md:items-end gap-2 text-center md:text-right text-[10px] font-mono text-gray-500">
             <div className="flex flex-wrap justify-center md:justify-end gap-4">
-               <a href="#" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Termos Gerais</a>
-               <a href="#" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Privacidade</a>
-               <a href="#" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Avisos legais</a>
+               <a href="https://velksgroup.com/terms-and-conditions/" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Termos Gerais</a>
+               <a href="https://velksgroup.com/privacy-policy/" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Privacidade</a>
+               <a href="https://velksgroup.com/refund-policy/" className="hover:text-white transition-colors underline decoration-gray-800 underline-offset-2">Avisos legais</a>
             </div>
             
             <p className="text-gray-600 mt-2 uppercase tracking-wide">
