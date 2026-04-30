@@ -8,7 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // Substituir este link pelo Payment Link real da Stripe quando o produto estiver criado.
-const stripeCheckoutUrl = "COLOCAR_AQUI_LINK_DO_CHECKOUT_STRIPE";
+const stripeCheckoutUrl = "https://book.stripe.com/dRmeVdbV4bCBc2Q7uF2cg00";
 const whatsappUrl = "https://wa.me/33761569686?text=Ol%C3%A1%2C%20vi%20a%20demo%20da%20VELKS.SPACE%20e%20quero%20implementar%20este%20sistema%20no%20meu%20site.%20Pode%20me%20explicar%20o%20pr%C3%B3ximo%20passo%3F";
 
 const handleMainCtaClick = () => {
@@ -275,7 +275,7 @@ function VSLHeroScene() {
               {/* Vertical Video background */}
               <video 
                 className="absolute inset-0 w-full h-full object-cover rounded-xl"
-                src="https://cdn.pixabay.com/video/2020/07/28/45887-446755452_large.mp4" 
+                src="/demo-video.mp4" 
                 autoPlay 
                 loop 
                 muted 
@@ -284,13 +284,6 @@ function VSLHeroScene() {
               
               {/* Premium Glow Edge */}
               <div className="absolute inset-0 border border-brand-cyan/40 rounded-xl pointer-events-none mix-blend-overlay"></div>
-              
-              {/* Play Button Overlay (Optional, if video autoplays it's just visual) */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black/20 group-hover:bg-black/10 transition-colors">
-                <div className="w-16 h-16 bg-brand-cyan/20 backdrop-blur-md rounded-full flex items-center justify-center border border-brand-cyan/50 group-hover:scale-110 group-hover:bg-brand-cyan/40 transition-all duration-300">
-                  <Play className="w-6 h-6 text-white ml-1" fill="currentColor" />
-                </div>
-              </div>
            </div>
            
            {/* Mobile-only assist message under video */}
