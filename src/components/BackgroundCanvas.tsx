@@ -1,454 +1,354 @@
-import React, { useRef, useMemo, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Stars, MeshDistortMaterial, MeshWobbleMaterial, Trail, Sphere, Line } from '@react-three/drei';
+import { Sphere, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// --- SCENE 1: Hero (Quantum Nexus) ---
-function Scene1() {
-  const coreRef = useRef<THREE.Group>(null);
-  const particlesRef = useRef<THREE.Points>(null);
-  const coreMeshRef = useRef<THREE.Mesh>(null);
-  
-  const particlesCount = 1200;
+function CustomParticles({ count = 1000, color = "#ffffff", size = 0.1, radius = 20 }) {
   const positions = useMemo(() => {
-    const pos = new Float32Array(particlesCount * 3);
-    for (let i = 0; i < particlesCount; i++) {
-      const radius = 10 + Math.random() * 40;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos((Math.random() * 2) - 1);
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi) - 20;
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const r = radius * Math.cbrt(Math.random());
+      const theta = Math.random() * 2 * Math.PI;
+      const phi = Math.acos(2 * Math.random() - 1);
+      pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i*3+2] = r * Math.cos(phi);
     }
     return pos;
-  }, []);
+  }, [count, radius]);
 
+  return (
+    <points>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial color={color} size={size} transparent opacity={0.6} sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false} />
+    </points>
+  );
+}
+
+function useSceneTransition(progress: React.MutableRefObject<number>, index: number) {
+  const groupRef = useRef<THREE.Group>(null);
+  
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const diff = progress.current - index;
+    const op = Math.max(0, 1 - Math.abs(diff));
+    
+    // Ocultar completamente se invisível para poupar performance
+    groupRef.current.visible = op > 0.001;
+    
+    // Efeito de travessia (fly-through):
+    // Próxima cena (diff = -1) começa no fundo em z = -25
+    // Cena atual (diff = 0) fica em z = -10
+    // Cena anterior (diff = 1) vem para a frente em z = 5
+    groupRef.current.position.z = -10 + diff * 15;
+
+    // Escala dramática ao entrar/sair
+    const scale = 1 + Math.abs(diff) * 0.2;
+    groupRef.current.scale.set(scale, scale, scale);
+
+    // Crossfade de opacidade em todos os materiais do grupo
+    groupRef.current.traverse((child: any) => {
+      if (child.isMesh || child.isPoints || child.isLineSegments || child.isLine) {
+        if (child.material) {
+          const mat = child.material;
+          if (mat.userData.baseOpacity === undefined) {
+            mat.userData.baseOpacity = mat.opacity !== undefined ? mat.opacity : 1;
+            mat.transparent = true;
+          }
+          mat.opacity = mat.userData.baseOpacity * op;
+        }
+      }
+    });
+  });
+
+  return groupRef;
+}
+
+// CENA 01 — HERO
+function SceneHero({ progress }: { progress: React.MutableRefObject<number> }) {
+  const groupRef = useSceneTransition(progress, 0);
+  
   useFrame((state) => {
-    const time = state.clock.elapsedTime;
-    if (coreRef.current) {
-      coreRef.current.rotation.y = time * 0.05;
-      coreRef.current.rotation.x = time * 0.02;
-      coreRef.current.position.y = Math.sin(time * 0.5) * 1;
-    }
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = time * 0.02;
-      particlesRef.current.rotation.z = time * 0.01;
-    }
-    if (coreMeshRef.current) {
-      // Reptilian Trigger: Magnetic Pulse (Life/Scale)
-      const pulse = 1 + Math.sin(time * 1.5) * 0.08;
-      coreMeshRef.current.scale.set(pulse, pulse, pulse);
+    const t = state.clock.elapsedTime;
+    if (groupRef.current) {
+      groupRef.current.rotation.y = t * 0.05;
+      groupRef.current.rotation.x = t * 0.02;
     }
   });
 
   return (
-    <group position={[0, 0, 0]}>
-      {/* Deep Immersive Environment Backdrop */}
-      <mesh position={[0, 0, -80]}>
-        <planeGeometry args={[1500, 1500]} />
-        <meshBasicMaterial color="#0c0022" />
+    <group ref={groupRef}>
+      <pointLight position={[0, 0, 0]} intensity={50} color="#00e5ff" distance={50} />
+      <Sphere args={[2.5, 64, 64]}>
+        <MeshDistortMaterial color="#000" emissive="#00e5ff" emissiveIntensity={2} distort={0.3} speed={2} roughness={0.2} metalness={1} />
+      </Sphere>
+      <mesh>
+        <icosahedronGeometry args={[3.5, 2]} />
+        <meshBasicMaterial color="#cc00ff" wireframe transparent opacity={0.3} blending={THREE.AdditiveBlending} />
       </mesh>
-      {/* Localized Atmospheric Fog / Haze */}
-      <mesh position={[0, 0, -30]}>
-        <sphereGeometry args={[80, 32, 32]} />
-        <meshBasicMaterial color="#6600ff" transparent opacity={0.03} side={THREE.BackSide} blending={THREE.AdditiveBlending}/>
+      <mesh rotation={[Math.PI/3, 0, 0]}>
+        <torusGeometry args={[4.5, 0.02, 32, 100]} />
+        <meshBasicMaterial color="#00e5ff" transparent opacity={0.5} blending={THREE.AdditiveBlending} />
       </mesh>
-      
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 20, 10]} intensity={2} color="#00e5ff" />
-      <pointLight position={[-10, 0, -10]} intensity={50} color="#00e5ff" distance={100} decay={2} />
-      <pointLight position={[10, 15, -20]} intensity={60} color="#9900ff" distance={100} decay={2} />
-      
-      <group ref={coreRef} position={[-10, 0, -25]}>
-        {/* Inner Quantum Core */}
-        <Sphere ref={coreMeshRef} args={[4, 64, 64]}>
-          <MeshDistortMaterial color="#000" emissive="#00e5ff" emissiveIntensity={1.5} distort={0.2} speed={1.5} roughness={0.2} metalness={1} />
-        </Sphere>
-        
-        {/* Orbital Rings */}
-        <mesh rotation={[Math.PI / 3, 0, 0]}>
-          <torusGeometry args={[8, 0.05, 16, 100]} />
-          <meshBasicMaterial color="#cc00ff" transparent opacity={0.8} blending={THREE.AdditiveBlending} />
-        </mesh>
-        <mesh rotation={[0, Math.PI / 3, 0]}>
-          <torusGeometry args={[11, 0.02, 16, 100]} />
-          <meshBasicMaterial color="#00e5ff" transparent opacity={0.6} blending={THREE.AdditiveBlending} />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 4]}>
-          <torusGeometry args={[14, 0.1, 16, 100]} />
-          <meshBasicMaterial color="#7000dd" transparent opacity={0.4} blending={THREE.AdditiveBlending} />
-        </mesh>
-        
-        {/* Surrounding Wireframe cage */}
-        <mesh>
-          <icosahedronGeometry args={[12, 1]} />
-          <meshBasicMaterial color="#00e5ff" wireframe transparent opacity={0.15} blending={THREE.AdditiveBlending} />
-        </mesh>
-      </group>
-      
-      {/* Background Holographic Rings */}
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-         <mesh position={[15, -10, -40]} rotation={[Math.PI / 4, Math.PI / 5, 0]}>
-           <ringGeometry args={[20, 20.2, 64]} />
-           <meshBasicMaterial color="#cc00ff" transparent opacity={0.4} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} />
-         </mesh>
-         <mesh position={[15, -10, -40]} rotation={[-Math.PI / 4, -Math.PI / 5, 0]}>
-           <ringGeometry args={[25, 25.1, 64]} />
-           <meshBasicMaterial color="#00e5ff" transparent opacity={0.2} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} />
-         </mesh>
-      </Float>
-
-      <points ref={particlesRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" count={particlesCount} array={positions} itemSize={3} />
-        </bufferGeometry>
-        <pointsMaterial size={0.15} color="#00e5ff" transparent opacity={0.8} blending={THREE.AdditiveBlending} sizeAttenuation={true} />
-      </points>
-      <Stars radius={50} depth={40} count={2000} factor={5} saturation={1} fade speed={1.5} color="#9900ff" />
+      <CustomParticles count={1200} color="#00e5ff" size={0.06} radius={25} />
     </group>
   );
 }
 
-// --- SCENE 2: The Pain (Cyber Carnage) ---
-function Scene2() {
+// CENA 02 — FUNIL SANDRA (Rede Neural)
+function SceneNeural({ progress }: { progress: React.MutableRefObject<number> }) {
+  const groupRef = useSceneTransition(progress, 1);
+  const geo = useMemo(() => new THREE.IcosahedronGeometry(4, 2), []);
+  const edges = useMemo(() => new THREE.EdgesGeometry(geo), [geo]);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (groupRef.current) {
+      groupRef.current.rotation.y = -t * 0.03;
+      groupRef.current.rotation.z = t * 0.02;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <pointLight position={[0, 0, 0]} intensity={40} color="#00ff88" distance={50} />
+      
+      <lineSegments geometry={edges}>
+        <lineBasicMaterial color="#00ff88" transparent opacity={0.3} blending={THREE.AdditiveBlending} />
+      </lineSegments>
+      
+      <points geometry={geo}>
+        <pointsMaterial color="#ffffff" size={0.15} transparent opacity={0.8} blending={THREE.AdditiveBlending} />
+      </points>
+
+      <group>
+        {[...Array(30)].map((_, i) => (
+          <mesh key={i} position={[(Math.random()-0.5)*12, (Math.random()-0.5)*12, (Math.random()-0.5)*12]} rotation={[Math.random()*Math.PI, Math.random()*Math.PI, 0]}>
+            <boxGeometry args={[0.2, 0.2, 0.2]} />
+            <meshBasicMaterial color="#00ff88" transparent opacity={0.6} blending={THREE.AdditiveBlending} />
+          </mesh>
+        ))}
+      </group>
+      
+      <CustomParticles count={1500} color="#00ff88" size={0.05} radius={25} />
+    </group>
+  );
+}
+
+// CENA 03 — PERDA DE LEADS (Fragmentação Digital)
+function SceneFragmentation({ progress }: { progress: React.MutableRefObject<number> }) {
+  const groupRef = useSceneTransition(progress, 2);
   const shardsRef = useRef<THREE.Group>(null);
-  const coreRef = useRef<THREE.Mesh>(null);
-  const lightRef = useRef<THREE.PointLight>(null);
   
   useFrame((state) => {
-    const time = state.clock.elapsedTime;
+    const t = state.clock.elapsedTime;
+    if (groupRef.current) {
+      groupRef.current.rotation.x = t * 0.05;
+      groupRef.current.rotation.y = t * 0.02;
+    }
     if (shardsRef.current) {
-      shardsRef.current.rotation.y = time * 0.1;
-      shardsRef.current.rotation.x = Math.sin(time * 0.5) * 0.2;
-      
-      // Reptilian Trigger: Quantum Expansion Movement (Looming Danger)
-      shardsRef.current.children.forEach((child, i) => {
-        const offset = i * 0.1;
-        const flex = 1 + Math.sin(time * 2 + offset) * 0.15;
-        child.scale.set(flex, flex, flex);
+      shardsRef.current.children.forEach((shard, i) => {
+        shard.position.y += Math.sin(t + i) * 0.01;
+        shard.rotation.x += 0.01;
+        shard.rotation.y += 0.02;
       });
     }
-    if (coreRef.current) {
-      // simulate a magnetic breathing black hole
-      const pulse = Math.sin(time * 3);
-      const scale = 1 + pulse * 0.1;
-      coreRef.current.scale.set(scale, scale, scale);
-    }
-    if (lightRef.current) {
-      // Reptilian Trigger: Magnetic Aura Pulse (Fight or Flight)
-      lightRef.current.intensity = 100 + Math.sin(time * 4) * 60;
-    }
   });
 
   return (
-    <group position={[0, 0, -100]}>
-      {/* Deep Immersive Environment Backdrop */}
-      <mesh position={[0, 0, -80]}>
-        <planeGeometry args={[1500, 1500]} />
-        <meshBasicMaterial color="#1a0004" />
-      </mesh>
-      {/* Localized Atmospheric Fog / Haze */}
-      <mesh position={[0, 0, -30]}>
-        <sphereGeometry args={[80, 32, 32]} />
-        <meshBasicMaterial color="#ff003c" transparent opacity={0.04} side={THREE.BackSide} blending={THREE.AdditiveBlending}/>
-      </mesh>
+    <group ref={groupRef}>
+      <pointLight position={[0, 0, 0]} intensity={60} color="#ff003c" distance={50} />
       
-      <ambientLight intensity={0.1} />
-      <directionalLight position={[10, 20, 10]} intensity={5} color="#ff003c" />
-      <pointLight ref={lightRef} position={[0, 0, -10]} intensity={100} color="#ff003c" decay={2} distance={100} />
-      <pointLight position={[-20, -20, -20]} intensity={50} color="#ff0000" decay={2} distance={100} />
-      
-      <group position={[0, 0, -20]}>
-        {/* Unstable Core */}
-        <mesh ref={coreRef}>
-          <octahedronGeometry args={[8, 0]} />
-          <meshStandardMaterial color="#000" wireframe={false} roughness={0} metalness={1}/>
-          <meshBasicMaterial color="#ff003c" wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
-        </mesh>
-        
-        {/* Fractal / Shards expanding outwards */}
-        <group ref={shardsRef}>
-          {[...Array(60)].map((_, i) => {
-             const angle = (i / 60) * Math.PI * 2;
-             const radius = 15 + Math.random() * 20;
-             const x = Math.cos(angle) * radius;
-             const z = Math.sin(angle) * radius;
-             const y = (Math.random() - 0.5) * 30;
-             return (
-               <mesh key={i} position={[x, y, z]} rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}>
-                 <coneGeometry args={[1, Math.random() * 15 + 5, 3]} />
-                 <meshStandardMaterial color="#2a0005" roughness={0.5} metalness={0.8} />
-                 <meshBasicMaterial color="#ff003c" wireframe transparent opacity={0.3} blending={THREE.AdditiveBlending} />
-               </mesh>
-             );
-          })}
-        </group>
+      <mesh>
+        <octahedronGeometry args={[2, 1]} />
+        <meshBasicMaterial color="#ff003c" wireframe transparent opacity={0.4} blending={THREE.AdditiveBlending} />
+      </mesh>
+
+      <group ref={shardsRef}>
+        {[...Array(80)].map((_, i) => {
+          const r = 3 + Math.random() * 10;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          const x = r * Math.sin(phi) * Math.cos(theta);
+          const y = r * Math.sin(phi) * Math.sin(theta);
+          const z = r * Math.cos(phi);
+          return (
+            <mesh key={i} position={[x, y, z]} rotation={[Math.random()*Math.PI, Math.random()*Math.PI, 0]}>
+              <tetrahedronGeometry args={[0.3 + Math.random() * 0.6, 0]} />
+              <meshBasicMaterial color={Math.random() > 0.5 ? "#ff003c" : "#ff3366"} transparent opacity={0.5} blending={THREE.AdditiveBlending} />
+            </mesh>
+          )
+        })}
       </group>
-      
-      {/* Intense red starfield / debris */}
-      <Stars radius={80} depth={50} count={1500} factor={6} saturation={1} fade speed={2} color="#ff003c" />
+
+      <CustomParticles count={1000} color="#ff003c" size={0.06} radius={25} />
     </group>
   );
 }
 
-// --- SCENE 3: The Mechanism (Hyper-Dimensional Core) ---
-function Scene3() {
-  const tunnelRef = useRef<THREE.Group>(null);
+// CENA 04 — AGENTES DE VOZ (Ondas Sonoras)
+function SceneWaves({ progress }: { progress: React.MutableRefObject<number> }) {
+  const groupRef = useSceneTransition(progress, 3);
+  const ringsRef = useRef<THREE.Group>(null);
   
   useFrame((state) => {
-    const time = state.clock.elapsedTime;
-    if (tunnelRef.current) {
-      // Reptilian Trigger: Mesmeric/Hypnotic Infinite Quantum Tunnel (Focus/Trance)
-      const zPos = (time * 10) % 40;
-      tunnelRef.current.position.z = zPos;
-      tunnelRef.current.rotation.z = time * 0.02;
+    const t = state.clock.elapsedTime;
+    if (groupRef.current) {
+      groupRef.current.rotation.x = Math.PI / 4 + Math.sin(t * 0.2) * 0.1;
+      groupRef.current.rotation.y = t * 0.05;
+    }
+    if (ringsRef.current) {
+      ringsRef.current.children.forEach((ring, i) => {
+        const scale = 1 + Math.sin(t * 2 - i * 0.5) * 0.1;
+        ring.scale.set(scale, scale, scale);
+      });
     }
   });
 
   return (
-    <group position={[0, 0, -200]}>
-      {/* Deep Immersive Environment Backdrop */}
-      <mesh position={[0, 0, -80]}>
-        <planeGeometry args={[1500, 1500]} />
-        <meshBasicMaterial color="#000722" />
-      </mesh>
-      {/* Localized Atmospheric Fog / Haze */}
-      <mesh position={[0, 0, -30]}>
-        <sphereGeometry args={[80, 32, 32]} />
-        <meshBasicMaterial color="#0088cc" transparent opacity={0.03} side={THREE.BackSide} blending={THREE.AdditiveBlending}/>
-      </mesh>
+    <group ref={groupRef}>
+      <pointLight position={[0, 0, 0]} intensity={40} color="#0055ff" distance={50} />
       
-      <ambientLight intensity={0.5} />
-      <pointLight position={[0, 0, -20]} intensity={100} color="#00e5ff" distance={150} decay={2} />
-      <pointLight position={[0, 0, 20]} intensity={50} color="#0055ff" distance={100} decay={2} />
-      
-      <group position={[0, 0, -40]} ref={tunnelRef}>
-         {/* Infinite Server Rings */}
-         {[...Array(12)].map((_, i) => (
-           <group key={i} position={[0, 0, i * -40]}>
-             <mesh>
-               <torusGeometry args={[25, 2, 8, 32]} />
-               <meshStandardMaterial color="#001133" metalness={0.9} roughness={0.1} />
-               <meshBasicMaterial color="#00e5ff" wireframe transparent opacity={0.3} blending={THREE.AdditiveBlending} />
-             </mesh>
-             {/* Data cores along the ring */}
-             {[...Array(8)].map((_, j) => {
-               const angle = (j / 8) * Math.PI * 2;
-               return (
-                 <mesh key={j} position={[Math.cos(angle) * 25, Math.sin(angle) * 25, 0]} rotation={[0, 0, angle]}>
-                   <boxGeometry args={[4, 4, 8]} />
-                   <meshStandardMaterial color="#00051a" />
-                   <meshBasicMaterial color="#00e5ff" wireframe transparent opacity={0.6} blending={THREE.AdditiveBlending} />
-                 </mesh>
-               )
-             })}
-           </group>
-         ))}
-         
-         {/* Central Laser */}
-         <mesh rotation={[Math.PI / 2, 0, 0]}>
-           <cylinderGeometry args={[0.5, 0.5, 500, 16]} />
-           <meshBasicMaterial color="#00e5ff" transparent opacity={0.8} blending={THREE.AdditiveBlending} />
-         </mesh>
-         <mesh rotation={[Math.PI / 2, 0, 0]}>
-           <cylinderGeometry args={[2, 2, 500, 16]} />
-           <meshBasicMaterial color="#0088cc" transparent opacity={0.2} blending={THREE.AdditiveBlending} />
-         </mesh>
-      </group>
-      
-      <Stars radius={80} depth={100} count={2000} factor={8} saturation={1} fade speed={3} color="#00e5ff" />
-    </group>
-  );
-}
+      <Sphere args={[1.5, 32, 32]}>
+        <meshBasicMaterial color="#0055ff" transparent opacity={0.7} blending={THREE.AdditiveBlending} />
+      </Sphere>
 
-// --- SCENE 4: Decision/CTA (Singularity Portal) ---
-function Scene4() {
-  const portalRef = useRef<THREE.Group>(null);
-  const singularityRef = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    const time = state.clock.elapsedTime;
-    if (portalRef.current) {
-      portalRef.current.rotation.z = time * 0.03;
-      portalRef.current.rotation.x = time * 0.01;
-      portalRef.current.rotation.y = time * 0.02;
-    }
-    if (singularityRef.current) {
-      // Reptilian Trigger: Inescapable Gravity/Looming threat/opportunity
-      const breathe = 1 + Math.sin(time * 1.5) * 0.03;
-      singularityRef.current.scale.set(breathe, breathe, breathe);
-    }
-  });
-
-  return (
-    <group position={[0, 0, -300]}>
-      {/* Deep Immersive Environment Backdrop */}
-      <mesh position={[0, 0, -80]}>
-        <planeGeometry args={[1500, 1500]} />
-        <meshBasicMaterial color="#1a0400" />
-      </mesh>
-      {/* Localized Atmospheric Fog / Haze */}
-      <mesh position={[0, 0, -30]}>
-        <sphereGeometry args={[80, 32, 32]} />
-        <meshBasicMaterial color="#ffaa00" transparent opacity={0.04} side={THREE.BackSide} blending={THREE.AdditiveBlending}/>
-      </mesh>
-
-      <ambientLight intensity={0.2} />
-      <pointLight position={[0, 0, 0]} intensity={150} color="#ffaa00" decay={2} distance={150} />
-      <pointLight position={[-20, 20, -20]} intensity={100} color="#cc00ff" decay={2} distance={100} />
-      <pointLight position={[20, -20, 10]} intensity={80} color="#ffffff" decay={2} distance={100} />
-
-      {/* Massive Singularity Structure */}
-      <group position={[0, 0, -20]}>
-        
-        {/* Reptilian Trigger: Blinding God Rays from behind the object */}
-        {[...Array(8)].map((_, i) => (
-          <mesh key={`ray-${i}`} position={[0, 0, -5]} rotation={[0, 0, (i / 8) * Math.PI]}>
-            <planeGeometry args={[2, 100]} />
-            <meshBasicMaterial color="#ffcc00" transparent opacity={0.05} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} />
+      <group ref={ringsRef}>
+        {[...Array(12)].map((_, i) => (
+          <mesh key={i} rotation={[Math.PI/2, 0, 0]}>
+            <torusGeometry args={[2.5 + i * 0.8, 0.02 + (i*0.005), 32, 100]} />
+            <meshBasicMaterial color="#00e5ff" transparent opacity={0.8 - i * 0.06} blending={THREE.AdditiveBlending} />
           </mesh>
-        ))}
-
-        <group ref={portalRef}>
-          {/* Flat Glowing Yellow Core */}
-          <Sphere ref={singularityRef} args={[9, 64, 64]}>
-             <meshBasicMaterial color="#ffcc00" />
-          </Sphere>
-          
-          {/* Secondary bright aura */}
-          <Sphere args={[10, 32, 32]}>
-             <meshBasicMaterial color="#ffaa00" transparent opacity={0.2} blending={THREE.AdditiveBlending} />
-          </Sphere>
-          
-          {/* Outer wireframe Torus (Cyan/Purple) */}
-          <mesh rotation={[Math.PI / 4, 0, 0]}>
-            <torusGeometry args={[14, 3, 10, 40]} />
-            <meshBasicMaterial color="#cc00ff" wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
-          </mesh>
-          
-          {/* Inner wireframe sphere */}
-          <mesh rotation={[0, Math.PI / 3, 0]}>
-            <sphereGeometry args={[12, 16, 16]} />
-            <meshBasicMaterial color="#00e5ff" wireframe transparent opacity={0.4} blending={THREE.AdditiveBlending} />
-          </mesh>
-          
-          {/* Intense thick ribbons/shapes (Yellow) */}
-          <mesh rotation={[Math.PI / 2, Math.PI / 4, 0]}>
-            <torusGeometry args={[18, 0.4, 4, 64]} />
-            <meshBasicMaterial color="#ffaa00" transparent opacity={0.7} blending={THREE.AdditiveBlending} />
-          </mesh>
-          
-          {/* Orbiting wireframe boxes */}
-          {[...Array(12)].map((_, i) => {
-            const angle = (i / 12) * Math.PI * 2;
-            const radius = 15 + Math.random() * 5;
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-            const z = (Math.random() - 0.5) * 8;
-            return (
-              <mesh key={`box-${i}`} position={[x, y, z]} rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}>
-                <boxGeometry args={[1.5, 1.5, 1.5]} />
-                <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.8} blending={THREE.AdditiveBlending} />
-              </mesh>
-            );
-          })}
-        </group>
-        
-        {/* Deep Gravity Well background rings */}
-        {[...Array(5)].map((_, i) => (
-           <mesh key={i} position={[0, 0, -20 - (i * 10)]}>
-             <ringGeometry args={[30 + i * 10, 32 + i * 10, 64]} />
-             <meshBasicMaterial color="#cc00ff" transparent opacity={0.1 - (i * 0.02)} blending={THREE.AdditiveBlending} />
-           </mesh>
         ))}
       </group>
       
-      <Stars radius={80} depth={60} count={3000} factor={8} saturation={1} fade speed={4} color="#ffcc00" />
+      <CustomParticles count={1200} color="#0055ff" size={0.06} radius={25} />
     </group>
   );
 }
 
-// --- Main Camera Controller linking scroll to 3D position ---
-function CameraController() {
-  const { camera } = useThree();
+// CENA 05 — CTA FINAL (Estrutura Monumental)
+function SceneCTA({ progress }: { progress: React.MutableRefObject<number> }) {
+  const groupRef = useSceneTransition(progress, 4);
+  const diskRef = useRef<THREE.Mesh>(null);
+  
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (groupRef.current) {
+      groupRef.current.rotation.y = t * 0.1;
+      groupRef.current.rotation.x = Math.sin(t * 0.5) * 0.1;
+    }
+    if (diskRef.current) {
+      diskRef.current.rotation.z = -t * 0.3;
+    }
+  });
 
+  return (
+    <group ref={groupRef}>
+      <pointLight position={[0, 0, 0]} intensity={100} color="#ffaa00" distance={100} />
+      <directionalLight position={[0, 10, -10]} intensity={2} color="#cc00ff" />
+      
+      <Sphere args={[3, 64, 64]}>
+        <MeshDistortMaterial color="#000" emissive="#ffcc00" emissiveIntensity={3} distort={0.2} speed={1} transparent opacity={0.9} />
+      </Sphere>
+
+      <mesh ref={diskRef} rotation={[Math.PI / 3, 0, 0]}>
+        <ringGeometry args={[4, 12, 128]} />
+        <meshBasicMaterial color="#ffaa00" transparent opacity={0.15} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} />
+      </mesh>
+      
+      <mesh rotation={[Math.PI / 3, 0, 0]}>
+        <ringGeometry args={[4.5, 4.6, 128]} />
+        <meshBasicMaterial color="#cc00ff" transparent opacity={0.6} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} />
+      </mesh>
+
+      <group>
+        {[...Array(6)].map((_, i) => {
+          const angle = (i / 6) * Math.PI * 2;
+          return (
+            <mesh key={i} position={[Math.cos(angle)*8, 0, Math.sin(angle)*8]}>
+              <cylinderGeometry args={[0.2, 0.2, 10, 16]} />
+              <meshBasicMaterial color="#ffaa00" transparent opacity={0.4} blending={THREE.AdditiveBlending} />
+            </mesh>
+          )
+        })}
+      </group>
+      
+      <CustomParticles count={2000} color="#ffcc00" size={0.07} radius={30} />
+    </group>
+  );
+}
+
+function EvolvingScene() {
+  const { camera, scene } = useThree();
+  const progress = useRef(0);
+  
   useLayoutEffect(() => {
-    camera.position.set(0, 0, 10);
-    camera.rotation.set(0, 0, 0);
-
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
+      gsap.to(progress, {
+        current: 4,
+        ease: "none",
         scrollTrigger: {
           trigger: "#main-scroll-container",
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.2,
+          scrub: 1,
         }
       });
-
-      // Travel into Scene 2 (Red Pain)
-      tl.to(camera.position, {
-        z: -90,
-        x: 15,
-        y: -10,
-        ease: "power3.inOut",
-      }, 0)
-      .to(camera.rotation, {
-        x: Math.PI / 4,
-        y: -Math.PI / 6,
-        z: Math.PI / 8,
-        ease: "power3.inOut"
-      }, 0)
-      
-      // Travel into Scene 3 (Cyan Mechanism)
-      .to(camera.position, {
-        z: -190,
-        x: -20,
-        y: 15,
-        ease: "power3.inOut",
-      }, 1)
-      .to(camera.rotation, {
-        x: -Math.PI / 5,
-        y: Math.PI / 4,
-        z: -Math.PI / 6,
-        ease: "power3.inOut"
-      }, 1)
-      
-      // Travel into Scene 4 (Gold/Purple CTA)
-      .to(camera.position, {
-        z: -290,
-        x: 0,
-        y: 0,
-        ease: "power3.inOut",
-      }, 2)
-      .to(camera.rotation, {
-        x: 0,
-        y: 0,
-        z: Math.PI * 2,
-        ease: "power3.inOut"
-      }, 2);
-      
     });
-
     return () => ctx.revert();
-  }, [camera]);
+  }, []);
 
-  return null;
+  const bgColors = useMemo(() => [
+    new THREE.Color("#020205"), // Hero
+    new THREE.Color("#010a05"), // Funnel
+    new THREE.Color("#0a0002"), // Pain
+    new THREE.Color("#00051a"), // Voices
+    new THREE.Color("#0a0600"), // CTA
+  ], []);
+
+  useFrame((state) => {
+    const p = Math.max(0, Math.min(progress.current, 4));
+    const idx = Math.floor(p);
+    const nextIdx = Math.min(idx + 1, 4);
+    const t = p - idx;
+    scene.background = new THREE.Color().copy(bgColors[idx]).lerp(bgColors[nextIdx], t);
+
+    const time = state.clock.elapsedTime;
+    camera.position.x = Math.sin(time * 0.1) * 1;
+    camera.position.y = Math.cos(time * 0.15) * 1;
+    camera.lookAt(0, 0, -10);
+  });
+
+  return (
+    <group>
+      <ambientLight intensity={0.1} color="#ffffff" />
+      <directionalLight position={[10, 20, 10]} intensity={1} color="#ffffff" />
+      
+      <SceneHero progress={progress} />
+      <SceneNeural progress={progress} />
+      <SceneFragmentation progress={progress} />
+      <SceneWaves progress={progress} />
+      <SceneCTA progress={progress} />
+    </group>
+  );
 }
 
 export default function BackgroundCanvas() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-black">
-      <Canvas dpr={[1, 2]} gl={{ antialias: false, powerPreference: "high-performance", alpha: false }}>
-         <CameraController />
-         <Scene1 />
-         <Scene2 />
-         <Scene3 />
-         <Scene4 />
+      <Canvas 
+        dpr={[1, 2]} 
+        gl={{ antialias: false, powerPreference: "high-performance", alpha: false }}
+        camera={{ position: [0, 0, 10], fov: 45 }}
+      >
+        <EvolvingScene />
       </Canvas>
     </div>
   );
