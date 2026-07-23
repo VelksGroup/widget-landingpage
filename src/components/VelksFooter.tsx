@@ -40,6 +40,7 @@ export function VelksFooter() {
     setPreferences(allPrefs);
     setCookieConsent(true);
     setShowPreferences(false);
+    window.dispatchEvent(new Event('cookieConsentResolved'));
   };
 
   const handleDeclineCookies = () => {
@@ -49,6 +50,7 @@ export function VelksFooter() {
     setPreferences(strictPrefs);
     setCookieConsent(false);
     setShowPreferences(false);
+    window.dispatchEvent(new Event('cookieConsentResolved'));
   };
 
   const handleSavePreferences = () => {
@@ -56,6 +58,7 @@ export function VelksFooter() {
     localStorage.setItem('velks-cookie-preferences', JSON.stringify(preferences));
     setCookieConsent(true);
     setShowPreferences(false);
+    window.dispatchEvent(new Event('cookieConsentResolved'));
   };
 
   return (

@@ -11,6 +11,7 @@ import PainScene from './components/PainScene';
 import MechanismScene from './components/MechanismScene';
 import TestimonialsScene from './components/TestimonialsScene';
 import CTAScene from './components/CTAScene';
+import { OrionWidget } from './components/OrionWidget';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <SEOSchema />
       <CustomCursor />
       <BackgroundCanvas />
+      <OrionWidget />
       
       <PromoBanner />
       <TopNav />
