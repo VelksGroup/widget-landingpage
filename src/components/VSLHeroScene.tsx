@@ -3,10 +3,34 @@ import { Play, Pause, Volume2, VolumeX, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const SealsRow = () => {
-  const { t } = useTranslation();
   return (
-    <div className="text-white/70 text-xs mt-8">
-      {t('seals_row_placeholder')}
+    <div className="flex flex-row justify-between w-full mt-8 sm:mt-12 gap-1.5 sm:gap-4">
+      {/* Card 1 */}
+      <div className="relative flex-1 group/seal rounded-lg sm:rounded-2xl overflow-hidden p-[1px] bg-gradient-to-b from-[#00ff88]/60 via-[#00ff88]/10 to-transparent shadow-[0_0_15px_rgba(0,255,136,0.1)] hover:shadow-[0_0_30px_rgba(0,255,136,0.25)] transition-all duration-500 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#00ff88]/10 to-transparent opacity-50 group-hover/seal:opacity-100 transition-opacity duration-500 animate-[pulse_4s_ease-in-out_infinite]"></div>
+        <div className="relative flex flex-col items-center justify-center h-full gap-2 sm:gap-3 bg-[#010603]/90 backdrop-blur-xl px-1 sm:px-4 py-3 sm:py-5 rounded-[7px] sm:rounded-[15px] border-t border-[#00ff88]/20">
+          <span className="text-[14px] sm:text-2xl md:text-3xl drop-shadow-[0_0_8px_rgba(0,255,136,0.8)] transform group-hover/seal:scale-110 transition-transform duration-500">⚡</span>
+          <span className="text-[6.5px] min-[350px]:text-[7.5px] min-[380px]:text-[8.5px] sm:text-[11px] md:text-[12px] text-[#00ff88] font-black uppercase tracking-tight min-[350px]:tracking-wide sm:tracking-widest whitespace-nowrap drop-shadow-[0_0_5px_rgba(0,255,136,0.3)]">Capta Clientes</span>
+        </div>
+      </div>
+      
+      {/* Card 2 */}
+      <div className="relative flex-1 group/seal rounded-lg sm:rounded-2xl overflow-hidden p-[1px] bg-gradient-to-b from-[#00ff88]/60 via-[#00ff88]/10 to-transparent shadow-[0_0_15px_rgba(0,255,136,0.1)] hover:shadow-[0_0_30px_rgba(0,255,136,0.25)] transition-all duration-500 hover:-translate-y-1" style={{ animationDelay: '1s' }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#00ff88]/10 to-transparent opacity-50 group-hover/seal:opacity-100 transition-opacity duration-500 animate-[pulse_4s_ease-in-out_infinite]" style={{ animationDelay: '1s' }}></div>
+        <div className="relative flex flex-col items-center justify-center h-full gap-2 sm:gap-3 bg-[#010603]/90 backdrop-blur-xl px-1 sm:px-4 py-3 sm:py-5 rounded-[7px] sm:rounded-[15px] border-t border-[#00ff88]/20">
+          <span className="text-[14px] sm:text-2xl md:text-3xl drop-shadow-[0_0_8px_rgba(0,255,136,0.8)] transform group-hover/seal:scale-110 transition-transform duration-500">🧠</span>
+          <span className="text-[6.5px] min-[350px]:text-[7.5px] min-[380px]:text-[8.5px] sm:text-[11px] md:text-[12px] text-[#00ff88] font-black uppercase tracking-tight min-[350px]:tracking-wide sm:tracking-widest whitespace-nowrap drop-shadow-[0_0_5px_rgba(0,255,136,0.3)]">Responde Sozinha</span>
+        </div>
+      </div>
+
+      {/* Card 3 */}
+      <div className="relative flex-1 group/seal rounded-lg sm:rounded-2xl overflow-hidden p-[1px] bg-gradient-to-b from-[#00ff88]/60 via-[#00ff88]/10 to-transparent shadow-[0_0_15px_rgba(0,255,136,0.1)] hover:shadow-[0_0_30px_rgba(0,255,136,0.25)] transition-all duration-500 hover:-translate-y-1" style={{ animationDelay: '2s' }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#00ff88]/10 to-transparent opacity-50 group-hover/seal:opacity-100 transition-opacity duration-500 animate-[pulse_4s_ease-in-out_infinite]" style={{ animationDelay: '2s' }}></div>
+        <div className="relative flex flex-col items-center justify-center h-full gap-2 sm:gap-3 bg-[#010603]/90 backdrop-blur-xl px-1 sm:px-4 py-3 sm:py-5 rounded-[7px] sm:rounded-[15px] border-t border-[#00ff88]/20">
+          <span className="text-[14px] sm:text-2xl md:text-3xl drop-shadow-[0_0_8px_rgba(0,255,136,0.8)] transform group-hover/seal:scale-110 transition-transform duration-500">📈</span>
+          <span className="text-[6.5px] min-[350px]:text-[7.5px] min-[380px]:text-[8.5px] sm:text-[11px] md:text-[12px] text-[#00ff88] font-black uppercase tracking-tight min-[350px]:tracking-wide sm:tracking-widest whitespace-nowrap drop-shadow-[0_0_5px_rgba(0,255,136,0.3)]">Aumenta Vendas</span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -29,6 +53,20 @@ function HeroDemoVideo() {
     video.muted = true;
     video.defaultMuted = true;
 
+    const logEvent = (e: Event) => {
+      console.log(`[VIDEO DIAGNOSTIC] Event: ${e.type} | currentTime: ${video.currentTime} | networkState: ${video.networkState} | readyState: ${video.readyState} | paused: ${video.paused}`);
+    };
+
+    video.addEventListener('waiting', logEvent);
+    video.addEventListener('stalled', logEvent);
+    video.addEventListener('suspend', logEvent);
+    video.addEventListener('pause', logEvent);
+    video.addEventListener('ended', logEvent);
+    video.addEventListener('playing', logEvent);
+    video.addEventListener('error', (e) => {
+      console.error(`[VIDEO DIAGNOSTIC] ERROR:`, video.error);
+    });
+
     const playPromise = video.play();
     if (playPromise !== undefined) {
       playPromise
@@ -40,6 +78,15 @@ function HeroDemoVideo() {
           setIsPlaying(false);
         });
     }
+
+    return () => {
+      video.removeEventListener('waiting', logEvent);
+      video.removeEventListener('stalled', logEvent);
+      video.removeEventListener('suspend', logEvent);
+      video.removeEventListener('pause', logEvent);
+      video.removeEventListener('ended', logEvent);
+      video.removeEventListener('playing', logEvent);
+    };
   }, []);
 
   const togglePlay = () => {
@@ -169,8 +216,7 @@ function VSLHeroScene() {
 
           <div className="border-l-[3px] border-[#00ff88] pl-4 py-1 my-2">
              <p className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#00ff88] font-bold drop-shadow-[0_0_5px_rgba(0,255,136,0.3)]">
-               {t('hero_warning_line1')}<br className="hidden sm:block" />
-               {t('hero_warning_line2')}
+               {t('hero_warning_line1')} {t('hero_warning_line2')}
              </p>
           </div>
           
@@ -188,12 +234,36 @@ function VSLHeroScene() {
                 {t('hero_cta_implement')} <ArrowUpRight className="w-5 h-5 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
               </button>
             </div>
-            <button onClick={() => {
-              const el = document.getElementById('demo-video-container');
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }} className="w-full sm:w-auto px-8 py-5 bg-transparent border-2 border-[#00ff88]/50 text-[#00ff88] hover:text-black font-mono text-sm font-bold uppercase tracking-widest hover:bg-[#00ff88] transition-all duration-300 shadow-[0_0_15px_rgba(0,255,136,0.1)]">
-               {t('hero_cta_watch_demo')}
-            </button>
+            <div className="relative w-full sm:w-auto group/demobtn">
+              {/* Outer pulse glow */}
+              <div className="absolute -inset-1 bg-[#00ff88]/40 blur-[25px] opacity-70 animate-[pulse_3s_ease-in-out_infinite] group-hover/demobtn:opacity-100 transition-opacity duration-500"></div>
+              
+              {/* Secondary smooth glow */}
+              <div className="absolute inset-0 bg-[#00ff88]/20 blur-[10px] opacity-100 transition-colors duration-500"></div>
+
+              {/* Energy beam border */}
+              <div 
+                className="absolute inset-0 pointer-events-none overflow-hidden" 
+                style={{ 
+                  padding: '2px', 
+                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', 
+                  WebkitMaskComposite: 'xor', 
+                  maskComposite: 'exclude' 
+                }}
+              >
+                <div 
+                  className="absolute -inset-[150%] animate-[spin_3s_linear_infinite]" 
+                  style={{ background: 'conic-gradient(from 0deg, transparent 75%, rgba(0,255,136,0.3) 90%, #00ff88 100%)' }}
+                ></div>
+              </div>
+
+              <button onClick={() => {
+                const el = document.getElementById('demo-video-container');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }} className="relative w-full sm:w-auto px-8 py-5 bg-transparent border-2 border-[#00ff88]/40 text-[#00ff88] hover:text-black font-mono text-sm font-bold uppercase tracking-widest hover:bg-[#00ff88] transition-all duration-300 shadow-[inset_0_0_15px_rgba(0,255,136,0.3)] group-hover/demobtn:shadow-[0_0_50px_rgba(0,255,136,0.9)]">
+                 {t('hero_cta_watch_demo')}
+              </button>
+            </div>
           </div>
           
           <SealsRow />
