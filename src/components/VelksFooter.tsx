@@ -72,7 +72,7 @@ export function VelksFooter() {
             <div className="md:col-span-5 flex flex-col gap-4">
               <div className="flex items-center gap-2">
                 <div className="relative w-8 h-8 flex items-center justify-center bg-transparent">
-                  <img loading="lazy" src="/velks-logo.png" alt="VELKS Logo" className="w-full h-full object-contain z-10" />
+                  <img loading="eager" decoding="async" fetchPriority="high" src="/velks-logo.png" alt="VELKS Logo" className="w-full h-full object-contain z-10" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-display font-bold tracking-widest text-white text-sm leading-none">VELKS</span>

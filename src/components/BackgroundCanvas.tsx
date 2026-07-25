@@ -344,8 +344,9 @@ export default function BackgroundCanvas() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-black">
       <Canvas 
-        dpr={[1, 2]} 
-        gl={{ antialias: false, powerPreference: "high-performance", alpha: false }}
+        dpr={[1, 1.5]} 
+        performance={{ min: 0.5 }}
+        gl={{ antialias: false, powerPreference: "high-performance", alpha: false, stencil: false, depth: false }}
         camera={{ position: [0, 0, 10], fov: 45 }}
       >
         <EvolvingScene />

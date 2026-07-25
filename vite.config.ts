@@ -26,7 +26,8 @@ export default defineConfig(({mode}) => {
             'gsap-vendor': ['gsap'],
             'icons-vendor': ['lucide-react'],
             'i18n-vendor': ['i18next', 'react-i18next'],
-            'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
+            'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+            'motion-vendor': ['framer-motion']
           }
         }
       },
