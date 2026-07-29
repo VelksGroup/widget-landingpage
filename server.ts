@@ -70,7 +70,8 @@ async function startServer() {
     res.type('text/plain');
     res.send(`User-agent: *
 Allow: /
-Sitemap: https://velks.space/sitemap.xml
+
+Sitemap: https://www.velks.space/sitemap.xml
 `);
   });
 
@@ -80,16 +81,16 @@ Sitemap: https://velks.space/sitemap.xml
     res.send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://velks.space/</loc>
+    <loc>https://www.velks.space/</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://velks.space/?lang=pt" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://velks.space/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://velks.space/?lang=es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://velks.space/?lang=fr" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://velks.space/?lang=de" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://velks.space/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.velks.space/?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.velks.space/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.velks.space/?lang=es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.velks.space/?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.velks.space/?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.velks.space/" />
   </url>
 </urlset>`);
   });

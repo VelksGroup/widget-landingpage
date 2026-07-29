@@ -1,4 +1,4 @@
-User-agent: *
+-e User-agent: *
 Allow: /
 
-Sitemap: https://velks.space/sitemap.xml
+Sitemap: https://www.velks.space/sitemap.xml

@@ -78,6 +78,7 @@ export function SEOSchema() {
   return (
     <Helmet>
       <title>{langData.title}</title>
+      <link rel="canonical" href={SEO_DATA.url} />
       <meta name="description" content={langData.description} />
       <meta property="og:title" content={langData.title} />
       <meta property="og:description" content={langData.description} />

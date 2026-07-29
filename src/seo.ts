@@ -19,8 +19,8 @@ export const SEO_DATA = {
     title: "VELKS Group | Orion AI - Ihr 24/7 KI-Verkäufer",
     description: "Die meisten Unternehmen verlieren jeden Tag Kunden, ohne es zu merken. Orion AI erkennt Interesse, initiiert Gespräche und begleitet potenzielle Kunden rund um die Uhr, um mehr Geschäftsmöglichkeiten zu generieren."
   },
-  canonical: "https://velks.space",
-  url: "https://velks.space",
+  canonical: "https://www.velks.space",
+  url: "https://www.velks.space",
   email: "velksgroup@gmail.com",
   phone: "+33 761 56 96 86",
   founders: ["Rosa Sofia Sousa Marques", "Lucca Farias Gagliardi"],
