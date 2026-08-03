@@ -137,5 +137,10 @@
   "cookieConsent_analytics": "Analyse et performances",
   "cookieConsent_analytics_desc": "Nous aident à comprendre comment les visiteurs interagissent avec le site.",
   "cookieConsent_marketing": "Marketing et publicité",
-  "cookieConsent_marketing_desc": "Utilisés pour diffuser des publicités pertinentes."
+  "cookieConsent_marketing_desc": "Utilisés pour diffuser des publicités pertinentes.",
+  "footer_network_title": "RÉSEAU OPÉRATIONNEL VELKS",
+  "footer_network_institutional": "Institutionnel",
+  "footer_network_ai_infrastructure": "Infrastructure IA",
+  "footer_network_commercial_automation": "Automatisation Commerciale",
+  "footer_network_digital_experiences": "Expériences Numériques"
 }

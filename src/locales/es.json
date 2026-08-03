@@ -137,5 +137,10 @@
   "cookieConsent_analytics": "Análisis y Rendimiento",
   "cookieConsent_analytics_desc": "Nos ayudan a entender cómo interactúan los visitantes con el sitio.",
   "cookieConsent_marketing": "Marketing y Publicidad",
-  "cookieConsent_marketing_desc": "Utilizados para ofrecer anuncios relevantes."
+  "cookieConsent_marketing_desc": "Utilizados para ofrecer anuncios relevantes.",
+  "footer_network_title": "RED OPERATIVA VELKS",
+  "footer_network_institutional": "Institucional",
+  "footer_network_ai_infrastructure": "Infraestructura IA",
+  "footer_network_commercial_automation": "Automatización Comercial",
+  "footer_network_digital_experiences": "Experiencias Digitales"
 }

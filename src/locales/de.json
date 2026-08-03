@@ -137,5 +137,10 @@
   "cookieConsent_analytics": "Analyse und Leistung",
   "cookieConsent_analytics_desc": "Helfen uns zu verstehen, wie Besucher mit der Website interagieren.",
   "cookieConsent_marketing": "Marketing und Werbung",
-  "cookieConsent_marketing_desc": "Wird verwendet, um relevante Werbung bereitzustellen."
+  "cookieConsent_marketing_desc": "Wird verwendet, um relevante Werbung bereitzustellen.",
+  "footer_network_title": "VELKS BETRIEBSNETZWERK",
+  "footer_network_institutional": "Institutionell",
+  "footer_network_ai_infrastructure": "KI-Infrastruktur",
+  "footer_network_commercial_automation": "Kommerzielle Automatisierung",
+  "footer_network_digital_experiences": "Digitale Erlebnisse"
 }

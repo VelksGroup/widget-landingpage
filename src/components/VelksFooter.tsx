@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // Replaced 'motion/react' with 'framer-motion' for broader compatibility
-import { Lock, MapPin, Mail, Phone, Shield, FileText, X } from 'lucide-react';
+import { Lock, MapPin, Mail, Phone, Shield, FileText, X, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 // Removed Language type and footerTranslations object as they will be managed by react-i18next
@@ -121,6 +121,86 @@ export function VelksFooter() {
               <div className="flex gap-3 mt-2 text-[10px] font-mono text-[#E5C15C] font-semibold uppercase">
                 <span>{t('footer_countries')}</span>
               </div>
+            </div>
+          </div>
+
+          {/* Velks Operational Network */}
+          <div className="mt-12 flex flex-col gap-3 text-xs font-light">
+            <h4 className="font-display font-bold text-white uppercase tracking-wider text-xs">
+              {t('footer_network_title')}
+            </h4>
+            <div className="flex flex-col gap-4 mt-2">
+              <a
+                href="https://velksgroup.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-0.5 relative w-fit"
+              >
+                <span className="text-gray-200 group-hover:text-white transition-colors font-medium">
+                  {t('footer_network_institutional')}
+                </span>
+                <span className="text-[#58a6ff] font-semibold flex items-center gap-1.5">
+                  VELKSGROUP.COM
+                  <ArrowUpRight
+                    size={14}
+                    className="opacity-70 group-hover:opacity-100 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+              </a>
+
+              <a
+                href="https://velksgroup.cloud"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-0.5 relative w-fit"
+              >
+                <span className="text-gray-200 group-hover:text-white transition-colors font-medium">
+                  {t('footer_network_ai_infrastructure')}
+                </span>
+                <span className="text-[#58a6ff] font-semibold flex items-center gap-1.5">
+                  VELKSGROUP.CLOUD
+                  <ArrowUpRight
+                    size={14}
+                    className="opacity-70 group-hover:opacity-100 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+              </a>
+
+              <a
+                href="https://velks.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-0.5 relative w-fit"
+              >
+                <span className="text-gray-200 group-hover:text-white transition-colors font-medium">
+                  {t('footer_network_commercial_automation')}
+                </span>
+                <span className="text-[#58a6ff] font-semibold flex items-center gap-1.5">
+                  VELKS.SPACE
+                  <ArrowUpRight
+                    size={14}
+                    className="opacity-70 group-hover:opacity-100 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+              </a>
+
+              <a
+                href="https://vgroup.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-0.5 relative w-fit"
+              >
+                <span className="text-gray-200 group-hover:text-white transition-colors font-medium">
+                  {t('footer_network_digital_experiences')}
+                </span>
+                <span className="text-[#58a6ff] font-semibold flex items-center gap-1.5">
+                  VGROUP.SPACE
+                  <ArrowUpRight
+                    size={14}
+                    className="opacity-70 group-hover:opacity-100 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+              </a>
             </div>
           </div>
 
