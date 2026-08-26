@@ -24,6 +24,15 @@
           "value": "geolocation=(), microphone=(), camera=()"
         }
       ]
+    },
+    {
+      "source": "/demo/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ],
   "rewrites": [
