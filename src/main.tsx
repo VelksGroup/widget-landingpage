@@ -4,11 +4,14 @@ import App from './App.tsx';
 import './index.css';
 import { HelmetProvider } from 'react-helmet-async';
 import './i18n';
+import { DemoApp } from './demo/DemoApp.tsx';
+
+const isDemoRoute = /^\/demo(\/|$)/.test(window.location.pathname);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
-      <App />
+      {isDemoRoute ? <DemoApp /> : <App />}
     </HelmetProvider>
   </StrictMode>,
 );
