@@ -5,7 +5,8 @@ import { getDemoStrings } from './i18n';
 import { resolveAbsoluteUrl } from './utils';
 import { ServiceCard } from './components/ServiceCard';
 import { QuoteRequest } from './components/QuoteRequest';
-import type { DemoService } from './types';
+import { templateRegistry } from './templates';
+import type { DemoCompanyConfig, DemoService } from './types';
 
 const SITE_URL = 'https://www.velks.space';
 
@@ -16,7 +17,7 @@ function extractSlug(pathname: string): string {
 
 function DemoUnavailable() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#020205] px-6 text-center text-white">
+    <div className="velks-demo-root flex min-h-screen flex-col items-center justify-center bg-[#020205] px-6 text-center text-white">
       <Helmet>
         <title>Demonstração indisponível — VELKS</title>
         <meta name="robots" content="noindex,nofollow" />
@@ -30,42 +31,12 @@ function DemoUnavailable() {
   );
 }
 
-export function DemoApp() {
-  const slug = useMemo(() => extractSlug(window.location.pathname), []);
-  const config = getDemoConfig(slug);
+function GenericDemoBody({ config }: { config: DemoCompanyConfig }) {
+  const strings = getDemoStrings(config.language);
   const [selectedService, setSelectedService] = useState<DemoService | undefined>(undefined);
 
-  if (!config) {
-    return <DemoUnavailable />;
-  }
-
-  const strings = getDemoStrings(config.language);
-  const canonical = `${SITE_URL}/demo/${config.slug}`;
-  const ogImage = resolveAbsoluteUrl(SITE_URL, config.og.image);
-  const ogLocale = config.locale.replace('-', '_');
-
   return (
-    <div className="min-h-screen bg-[#020205] text-white">
-      <Helmet>
-        <title>{config.og.title}</title>
-        <meta name="description" content={config.og.description} />
-        <link rel="canonical" href={canonical} />
-        <meta name="robots" content="noindex,nofollow" />
-        <meta name="googlebot" content="noindex,nofollow" />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={config.og.title} />
-        <meta property="og:description" content={config.og.description} />
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:url" content={canonical} />
-        <meta property="og:locale" content={ogLocale} />
-
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content={config.og.title} />
-        <meta property="twitter:description" content={config.og.description} />
-        <meta property="twitter:image" content={ogImage} />
-      </Helmet>
-
+    <>
       {/* Hero */}
       <section className="relative flex min-h-[70vh] flex-col justify-end overflow-hidden px-6 pb-12 pt-24 sm:px-10">
         <img
@@ -152,6 +123,46 @@ export function DemoApp() {
           <p className="mt-4 text-white/60">{strings.selectServicePrompt}</p>
         )}
       </section>
+    </>
+  );
+}
+
+export function DemoApp() {
+  const slug = useMemo(() => extractSlug(window.location.pathname), []);
+  const config = getDemoConfig(slug);
+
+  if (!config) {
+    return <DemoUnavailable />;
+  }
+
+  const canonical = `${SITE_URL}/demo/${config.slug}`;
+  const ogImage = resolveAbsoluteUrl(SITE_URL, config.og.image);
+  const ogLocale = config.locale.replace('-', '_');
+  const Template = templateRegistry[config.slug];
+
+  return (
+    <div className="velks-demo-root min-h-screen bg-[#020205] text-white">
+      <Helmet>
+        <title>{config.og.title}</title>
+        <meta name="description" content={config.og.description} />
+        <link rel="canonical" href={canonical} />
+        <meta name="robots" content="noindex,nofollow" />
+        <meta name="googlebot" content="noindex,nofollow" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={config.og.title} />
+        <meta property="og:description" content={config.og.description} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:locale" content={ogLocale} />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={config.og.title} />
+        <meta property="twitter:description" content={config.og.description} />
+        <meta property="twitter:image" content={ogImage} />
+      </Helmet>
+
+      {Template ? <Template config={config} /> : <GenericDemoBody config={config} />}
     </div>
   );
 }

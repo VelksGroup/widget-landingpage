@@ -38,6 +38,12 @@
   }
 }
 
+/* /demo/* pages don't render the landing's custom cursor, so restore the native one. */
+.velks-demo-root,
+.velks-demo-root * {
+  cursor: auto !important;
+}
+
 @layer utilities {
   .glass-panel {
     @apply bg-black/40 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];

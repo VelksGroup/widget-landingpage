@@ -7,9 +7,11 @@ import { cn } from '../../lib/utils';
 interface QuoteRequestProps {
   config: DemoCompanyConfig;
   service: DemoService;
+  /** Overrides the submit button's color classes so bespoke templates can match their own palette. */
+  accentClassName?: string;
 }
 
-export function QuoteRequest({ config, service }: QuoteRequestProps) {
+export function QuoteRequest({ config, service, accentClassName }: QuoteRequestProps) {
   const strings = getDemoStrings(config.language);
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [visitorName, setVisitorName] = useState('');
@@ -175,7 +177,10 @@ export function QuoteRequest({ config, service }: QuoteRequestProps) {
       {canSend ? (
         <button
           type="submit"
-          className="mt-2 rounded-full bg-[#ff003c] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className={cn(
+            'mt-2 rounded-full px-6 py-3 font-semibold transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+            accentClassName ?? 'bg-[#ff003c] text-white focus-visible:outline-white',
+          )}
         >
           {config.contact.whatsapp ? strings.sendWhatsapp : strings.sendEmail}
         </button>

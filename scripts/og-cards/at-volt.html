@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: #0b1d2e;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    background:
+      linear-gradient(180deg, rgba(11,29,46,0) 0%, rgba(6,16,26,0.65) 100%),
+      repeating-linear-gradient(0deg, rgba(180,210,230,0.07) 0px, rgba(180,210,230,0.07) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(90deg, rgba(180,210,230,0.07) 0px, rgba(180,210,230,0.07) 1px, transparent 1px, transparent 40px),
+      #0b1d2e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 90px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: #e8a33d;
+    padding: 8px 16px;
+    border: 1px solid rgba(232,163,61,0.5);
+    border-radius: 999px;
+    margin-bottom: 34px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e8a33d;
+    box-shadow: 0 0 12px 2px rgba(232,163,61,0.8);
+  }
+
+  h1 {
+    font-size: 112px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+    color: #eaf2f8;
+    text-transform: uppercase;
+  }
+
+  h1 span {
+    color: #e8a33d;
+  }
+
+  p {
+    margin-top: 26px;
+    max-width: 780px;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: rgba(234,242,248,0.72);
+  }
+
+  .circuit {
+    position: absolute;
+    right: 70px;
+    top: 70px;
+    opacity: 0.9;
+  }
+
+  .baseline {
+    position: absolute;
+    bottom: 56px;
+    left: 90px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: rgba(234,242,248,0.45);
+  }
+
+</style>
+</head>
+<body>
+  <div class="card">
+    <svg class="circuit" width="360" height="220" viewBox="0 0 360 220" fill="none">
+      <path d="M10 190 H120 V110 H230" stroke="rgba(234,242,248,0.35)" stroke-width="2.5" fill="none"/>
+      <path d="M230 110 V40 H350" stroke="#e8a33d" stroke-width="2.5" fill="none"/>
+      <circle cx="10" cy="190" r="6" fill="rgba(234,242,248,0.6)"/>
+      <circle cx="230" cy="110" r="7" fill="#e8a33d"/>
+      <circle cx="350" cy="40" r="6" fill="#e8a33d"/>
+      <circle cx="350" cy="40" r="14" stroke="#e8a33d" stroke-width="1.5" fill="none" opacity="0.6"/>
+    </svg>
+
+    <div class="tag"><span class="dot"></span>COIMBRA &middot; PT</div>
+    <h1>AT<br/><span>VOLT</span></h1>
+    <p>Instalações elétricas e pequenos arranjos. Orçamento estruturado em poucos minutos.</p>
+
+    <div class="baseline">DEMONSTRAÇÃO &middot; VELKS.SPACE</div>
+  </div>
+</body>
+</html>
