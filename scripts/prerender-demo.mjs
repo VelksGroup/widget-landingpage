@@ -62,6 +62,10 @@ async function main() {
 
     let html = template;
 
+    // The landing preloads assets (hero video, logo) that bespoke demo templates don't use.
+    html = html.replace(/\s*<link rel="preload" href="\/demo-video\.mp4"[^>]*>/, '');
+    html = html.replace(/\s*<link rel="preload" href="\/velks-logo\.png"[^>]*>/, '');
+
     html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`);
     html = html.replace(
       /<meta name="description" content="[\s\S]*?"\s*\/?>/,
