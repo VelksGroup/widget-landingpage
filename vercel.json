@@ -41,6 +41,14 @@
       "destination": "https://orion-capture-widget.vercel.app/$1"
     },
     {
+      "source": "/demo/:slug",
+      "destination": "/api/demo/:slug"
+    },
+    {
+      "source": "/demo/:slug/",
+      "destination": "/api/demo/:slug"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
