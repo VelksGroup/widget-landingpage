@@ -1,0 +1,111 @@
+[
+  {
+    "slug": "at-volt",
+    "companyName": "AT VOLT",
+    "niche": "Instalações elétricas e pequenos arranjos",
+    "locality": "Coimbra, Portugal",
+    "locale": "pt-PT",
+    "language": "pt",
+    "content": {
+      "tagline": "Eletricidade feita com precisão, em Coimbra.",
+      "shortDescription": "Instalações elétricas e pequenos arranjos, do diagnóstico à ligação final.",
+      "process": [
+        { "title": "Descreva o trabalho", "description": "Indique o espaço, o tipo de intervenção e os detalhes que já sabe." },
+        { "title": "Pedido estruturado", "description": "A informação é organizada num pedido claro, pronto a enviar." },
+        { "title": "Resposta direta da AT VOLT", "description": "Sem trocas infinitas de mensagens para chegar ao essencial." }
+      ]
+    },
+    "contact": { "email": "geral@atvolt.pt" },
+    "offerings": [
+      {
+        "id": "instalacoes-eletricas",
+        "title": "Instalações elétricas",
+        "description": "Instalação e alteração de pontos de luz, tomadas e quadros elétricos, em obra nova ou remodelação.",
+        "selectable": true,
+        "quoteFields": [
+          { "key": "espaco", "label": "Espaço ou divisão", "type": "text", "required": true, "placeholder": "Ex: cozinha, garagem, escritório" },
+          { "key": "tipoObra", "label": "Tipo de obra", "type": "select", "required": true, "options": ["Obra nova", "Remodelação / alteração"] },
+          { "key": "numPontos", "label": "Número aproximado de pontos", "type": "number", "required": false, "unit": "pontos" },
+          { "key": "localidade", "label": "Localidade", "type": "text", "required": true, "placeholder": "Ex: Coimbra" }
+        ]
+      },
+      {
+        "id": "arranjos-reparacoes",
+        "title": "Pequenos arranjos e reparações",
+        "description": "Resolução de avarias, substituições e pequenos arranjos elétricos no dia a dia.",
+        "selectable": true,
+        "quoteFields": [
+          { "key": "problema", "label": "Descreva o problema", "type": "textarea", "required": true },
+          { "key": "inicio", "label": "Quando começou", "type": "text", "required": false },
+          { "key": "imovel", "label": "Tipo de imóvel", "type": "select", "required": true, "options": ["Habitação", "Escritório / comércio", "Outro"] },
+          { "key": "urgencia", "label": "Urgência", "type": "select", "required": true, "options": ["Assim que possível", "Esta semana", "Sem pressa"] },
+          { "key": "localidade", "label": "Localidade", "type": "text", "required": true, "placeholder": "Ex: Coimbra" }
+        ]
+      }
+    ],
+    "conversion": { "mode": "quote", "primaryChannel": "email", "allowEmptySelection": true, "ctaLabel": "Pedir orçamento", "triggerLabel": "Pedir orçamento" },
+    "accent": { "background": "#0b1d2e", "surface": "#091725", "ink": "#eaf2f8", "accent": "#e8a33d", "accentInk": "#0b1d2e", "radius": "sharp" },
+    "og": {
+      "title": "AT VOLT — Eletricidade em Coimbra | Demonstração",
+      "description": "Instalações elétricas e pequenos arranjos em Coimbra. Peça um orçamento estruturado em poucos minutos."
+    },
+    "enableThree": false,
+    "publish": true
+  },
+  {
+    "slug": "zzz-validacao-restaurante",
+    "companyName": "Trattoria Fictícia (validação)",
+    "niche": "restaurante-teste",
+    "locality": "Porto, Portugal",
+    "content": { "tagline": "Registo de validação do publisher — não publicar." },
+    "contact": { "whatsapp": "+351910000000" },
+    "offerings": [
+      { "id": "pizza-teste", "title": "Pizza de teste", "price": 12, "priceLabel": "12€", "selectable": true, "quantityEnabled": true }
+    ],
+    "conversion": { "mode": "order", "primaryChannel": "whatsapp", "allowEmptySelection": false },
+    "og": { "title": "Validação — restaurante", "description": "Registo de validação do publisher." },
+    "publish": false
+  },
+  {
+    "slug": "zzz-validacao-tecnico",
+    "companyName": "Serviço Técnico Fictício (validação)",
+    "niche": "tecnico-teste",
+    "locality": "Braga, Portugal",
+    "content": { "tagline": "Registo de validação do publisher — não publicar." },
+    "contact": { "email": "validacao-tecnico@example.com" },
+    "offerings": [
+      { "id": "reparacao-teste", "title": "Reparação de teste", "selectable": true, "quoteFields": [{ "key": "problema", "label": "Descreva o problema", "type": "textarea", "required": true }] }
+    ],
+    "conversion": { "mode": "quote", "primaryChannel": "email", "allowEmptySelection": true },
+    "og": { "title": "Validação — técnico", "description": "Registo de validação do publisher." },
+    "publish": false
+  },
+  {
+    "slug": "zzz-validacao-clinica",
+    "companyName": "Clínica Fictícia (validação)",
+    "niche": "clinica-teste",
+    "locality": "Lisboa, Portugal",
+    "content": { "tagline": "Registo de validação do publisher — não publicar." },
+    "contact": { "whatsapp": "+351920000000" },
+    "offerings": [
+      { "id": "consulta-teste", "title": "Consulta de teste", "selectable": true }
+    ],
+    "conversion": { "mode": "booking", "primaryChannel": "whatsapp", "allowEmptySelection": true },
+    "og": { "title": "Validação — clínica", "description": "Registo de validação do publisher." },
+    "publish": false
+  },
+  {
+    "slug": "zzz-validacao-transportadora",
+    "companyName": "Transportes Fictícios (validação)",
+    "niche": "transportadora-teste",
+    "locality": "Setúbal, Portugal",
+    "content": { "tagline": "Registo de validação do publisher — não publicar." },
+    "contact": { "phone": "+351930000000" },
+    "offerings": [
+      { "id": "mudanca-teste", "title": "Mudança de teste", "selectable": true, "quoteFields": [{ "key": "origem", "label": "Origem", "type": "text", "required": true }, { "key": "destino", "label": "Destino", "type": "text", "required": true }] }
+    ],
+    "conversion": { "mode": "quote", "primaryChannel": "phone", "allowEmptySelection": true },
+    "og": { "title": "Validação — transportadora", "description": "Registo de validação do publisher." },
+    "publish": false
+  }
+]
