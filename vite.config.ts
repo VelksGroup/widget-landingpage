@@ -21,27 +21,14 @@ export default defineConfig(({mode}) => {
       cssMinify: true,
       rollupOptions: {
         output: {
-          manualChunks(id) {
-            // Vite's shared dynamic-import() runtime helper must never be homed inside a
-            // heavy vendor chunk (e.g. three-vendor) — every chunk with a dynamic import
-            // needs it, which would otherwise force-load that vendor's bytes everywhere.
-            if (id.includes('vite/preload-helper')) return 'app-runtime';
-            if (!id.includes('node_modules')) return undefined;
-            if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) return 'react-vendor';
-            if (id.includes('node_modules/gsap')) return 'gsap-vendor';
-            if (id.includes('node_modules/lucide-react')) return 'icons-vendor';
-            if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) return 'i18n-vendor';
-            if (
-              id.includes('node_modules/three') ||
-              id.includes('node_modules/@react-three/fiber') ||
-              id.includes('node_modules/@react-three/drei')
-            ) {
-              return 'three-vendor';
-            }
-            if (id.includes('node_modules/framer-motion') || id.includes('node_modules/motion')) return 'motion-vendor';
-            if (id.includes('node_modules/@supabase')) return 'supabase-vendor';
-            return undefined;
-          },
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+            'gsap-vendor': ['gsap'],
+            'icons-vendor': ['lucide-react'],
+            'i18n-vendor': ['i18next', 'react-i18next'],
+            'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+            'motion-vendor': ['framer-motion']
+          }
         }
       },
       chunkSizeWarningLimit: 1000

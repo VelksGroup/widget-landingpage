@@ -1,4 +1,4 @@
-import type { DemoRecord, DemoLanguage, Offering, QuoteField } from './types';
+import type { DemoCompanyConfig, DemoService, DemoLanguage } from './types';
 import { getDemoStrings } from './i18n';
 
 /**
@@ -18,33 +18,6 @@ export function buildMailtoUrl(email: string, subject: string, body: string): st
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-export function buildTelUrl(rawPhone: string): string {
-  return `tel:${rawPhone.replace(/[^\d+]/g, '')}`;
-}
-
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(amount);
-}
-
-export function formatOfferingPrice(offering: Pick<Offering, 'price' | 'priceLabel'>): string | undefined {
-  if (offering.priceLabel) return offering.priceLabel;
-  if (typeof offering.price === 'number') return formatCurrency(offering.price);
-  if (typeof offering.price === 'string' && offering.price.trim()) return offering.price;
-  return undefined;
-}
-
-/** Reserved fieldValues key for the generic, reusable per-item note (never a hardcoded niche-specific label). */
-export const ITEM_NOTE_FIELD_KEY = '_note';
-
-export function resolveAbsoluteUrl(siteUrl: string, pathOrUrl: string): string {
-  if (!pathOrUrl) return pathOrUrl;
-  if (/^https?:\/\//i.test(pathOrUrl)) {
-    return pathOrUrl;
-  }
-  const normalizedPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
-  return `${siteUrl}${normalizedPath}`;
-}
-
 export interface VisitorInfo {
   name: string;
   phone: string;
@@ -52,103 +25,88 @@ export interface VisitorInfo {
   notes?: string;
 }
 
-export interface SelectedOffering {
-  offering: Offering;
-  quantity: number;
-  fieldValues: Record<string, string>;
-}
-
-const GREETING_BY_LANGUAGE: Record<DemoLanguage, string> = {
-  pt: 'Olá, gostaria de pedir informação/orçamento.',
-  en: 'Hello, I would like to request information/a quote.',
-  es: 'Hola, me gustaría pedir información/un presupuesto.',
-  fr: "Bonjour, je souhaite demander des informations/un devis.",
-  de: 'Hallo, ich möchte Informationen/ein Angebot anfragen.',
-  it: 'Salve, vorrei richiedere informazioni/un preventivo.',
-};
-
-const SECTION_LABELS: Record<DemoLanguage, { items: string; data: string; details: string; notes: string }> = {
-  pt: { items: 'Itens selecionados', data: 'Dados', details: 'Detalhes', notes: 'Observações' },
-  en: { items: 'Selected items', data: 'Details', details: 'Additional details', notes: 'Notes' },
-  es: { items: 'Elementos seleccionados', data: 'Datos', details: 'Detalles', notes: 'Observaciones' },
-  fr: { items: 'Éléments sélectionnés', data: 'Coordonnées', details: 'Détails', notes: 'Observations' },
-  de: { items: 'Ausgewählte Posten', data: 'Angaben', details: 'Details', notes: 'Anmerkungen' },
-  it: { items: 'Elementi selezionati', data: 'Dati', details: 'Dettagli', notes: 'Note' },
-};
-
-function formatFieldLine(field: QuoteField, value: string): string {
-  const unit = field.unit ? ` ${field.unit}` : '';
-  return `${field.label}: ${value}${unit}`;
-}
-
-export interface OrderContext {
-  fulfillmentType?: string;
-  preferredTime?: string;
-}
-
-export function buildConversionMessage(
-  demo: DemoRecord,
-  selection: SelectedOffering[],
-  globalFieldValues: Record<string, string>,
+export function buildQuoteMessage(
+  config: DemoCompanyConfig,
+  service: DemoService,
+  fieldValues: Record<string, string>,
   visitor: VisitorInfo,
   language: DemoLanguage,
-  orderContext?: OrderContext,
 ): string {
   const strings = getDemoStrings(language);
-  const labels = SECTION_LABELS[language] ?? SECTION_LABELS.pt;
   const lines: string[] = [];
 
-  lines.push(demo.conversion.customMessageIntro || GREETING_BY_LANGUAGE[language] || GREETING_BY_LANGUAGE.pt, '');
+  const greeting =
+    language === 'en'
+      ? 'Hello, I would like to request a quote.'
+      : language === 'es'
+        ? 'Hola, me gustaría pedir un presupuesto.'
+        : language === 'fr'
+          ? 'Bonjour, je souhaite demander un devis.'
+          : language === 'de'
+            ? 'Hallo, ich möchte ein Angebot anfragen.'
+            : language === 'it'
+              ? 'Salve, vorrei richiedere un preventivo.'
+              : 'Olá, gostaria de pedir um orçamento.';
 
-  let numericTotal = 0;
-  if (selection.length > 0) {
-    lines.push(`${labels.items}:`);
-    for (const { offering, quantity, fieldValues } of selection) {
-      const qty = offering.quantityEnabled && quantity > 1 ? ` x${quantity}` : '';
-      const priceLabel = formatOfferingPrice(offering);
-      const price = priceLabel ? ` (${priceLabel})` : '';
-      lines.push(`- ${offering.title}${qty}${price}`);
-      for (const field of offering.quoteFields ?? []) {
-        const value = fieldValues[field.key]?.trim();
-        if (value) lines.push(`  ${formatFieldLine(field, value)}`);
-      }
-      const itemNote = fieldValues[ITEM_NOTE_FIELD_KEY]?.trim();
-      if (itemNote) lines.push(`  ${labels.notes}: ${itemNote}`);
-      if (typeof offering.price === 'number') numericTotal += offering.price * quantity;
+  lines.push(greeting, '');
+
+  const companyLabel =
+    language === 'en'
+      ? 'Company'
+      : language === 'es'
+        ? 'Empresa'
+        : language === 'fr'
+          ? 'Entreprise'
+          : language === 'de'
+            ? 'Firma'
+            : language === 'it'
+              ? 'Azienda'
+              : 'Empresa';
+  const serviceLabel =
+    language === 'en'
+      ? 'Service'
+      : language === 'es'
+        ? 'Servicio'
+        : language === 'fr'
+          ? 'Service'
+          : language === 'de'
+            ? 'Leistung'
+            : language === 'it'
+              ? 'Servizio'
+              : 'Serviço';
+
+  lines.push(`${companyLabel}: ${config.companyName}`);
+  lines.push(`${serviceLabel}: ${service.title}`);
+  lines.push('');
+
+  for (const field of service.quoteFields) {
+    const value = fieldValues[field.key]?.trim();
+    if (value) {
+      const unit = field.unit ? ` ${field.unit}` : '';
+      lines.push(`${field.label}: ${value}${unit}`);
     }
-    lines.push('');
   }
 
-  if (numericTotal > 0) {
-    lines.push(`${strings.total}: ${formatCurrency(numericTotal)}`, '');
-  }
-
-  if (demo.conversion.mode === 'order' && (orderContext?.fulfillmentType || orderContext?.preferredTime)) {
-    lines.push(`${labels.details}:`);
-    if (orderContext.fulfillmentType) lines.push(`${strings.fulfillmentTypeLabel}: ${orderContext.fulfillmentType}`);
-    if (orderContext.preferredTime) lines.push(`${strings.preferredTimeLabel}: ${orderContext.preferredTime}`);
-    lines.push('');
-  }
-
-  lines.push(`${labels.data}:`);
+  lines.push('');
   lines.push(`${strings.name}: ${visitor.name}`);
   lines.push(`${strings.phone}: ${visitor.phone}`);
   if (visitor.email?.trim()) {
     lines.push(`${strings.email}: ${visitor.email.trim()}`);
   }
 
-  const globalFields = demo.conversion.globalQuoteFields ?? [];
-  const filledGlobalFields = globalFields.filter((field) => globalFieldValues[field.key]?.trim());
-  if (filledGlobalFields.length > 0) {
-    lines.push('', `${labels.details}:`);
-    for (const field of filledGlobalFields) {
-      lines.push(formatFieldLine(field, globalFieldValues[field.key].trim()));
-    }
-  }
-
   if (visitor.notes?.trim()) {
-    lines.push('', `${labels.notes}:`, visitor.notes.trim());
+    lines.push('');
+    lines.push(`${strings.notes}:`);
+    lines.push(visitor.notes.trim());
   }
 
   return lines.join('\n');
+}
+
+export function resolveAbsoluteUrl(siteUrl: string, pathOrUrl: string): string {
+  if (/^https?:\/\//i.test(pathOrUrl)) {
+    return pathOrUrl;
+  }
+  const normalizedPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+  return `${siteUrl}${normalizedPath}`;
 }
