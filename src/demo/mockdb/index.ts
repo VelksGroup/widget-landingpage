@@ -1,11 +1,11 @@
-import type { DemoCompanyConfig } from './types';
+import type { BusinessDemoConfig } from '../types';
 
 const modules = import.meta.glob('./companies/*.ts', {
   eager: true,
   import: 'default',
-}) as Record<string, DemoCompanyConfig>;
+}) as Record<string, BusinessDemoConfig>;
 
-export const demoRegistry: Record<string, DemoCompanyConfig> = {};
+export const demoRegistry: Record<string, BusinessDemoConfig> = {};
 
 for (const path in modules) {
   const config = modules[path];
@@ -14,7 +14,7 @@ for (const path in modules) {
   }
 }
 
-export function getDemoConfig(slug: string): DemoCompanyConfig | undefined {
+export function getDemoConfig(slug: string): BusinessDemoConfig | undefined {
   return demoRegistry[slug];
 }
 

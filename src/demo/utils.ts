@@ -1,4 +1,4 @@
-import type { DemoCompanyConfig, DemoService, DemoLanguage } from './types';
+import type { BusinessDemoConfig, DemoLanguage, Offering, QuoteField } from './types';
 import { getDemoStrings } from './i18n';
 
 /**
@@ -18,6 +18,14 @@ export function buildMailtoUrl(email: string, subject: string, body: string): st
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+export function resolveAbsoluteUrl(siteUrl: string, pathOrUrl: string): string {
+  if (/^https?:\/\//i.test(pathOrUrl)) {
+    return pathOrUrl;
+  }
+  const normalizedPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+  return `${siteUrl}${normalizedPath}`;
+}
+
 export interface VisitorInfo {
   name: string;
   phone: string;
@@ -25,88 +33,81 @@ export interface VisitorInfo {
   notes?: string;
 }
 
-export function buildQuoteMessage(
-  config: DemoCompanyConfig,
-  service: DemoService,
-  fieldValues: Record<string, string>,
+export interface SelectedOffering {
+  offering: Offering;
+  quantity: number;
+  fieldValues: Record<string, string>;
+}
+
+const GREETING_BY_LANGUAGE: Record<DemoLanguage, string> = {
+  pt: 'Olá, gostaria de pedir informação/orçamento.',
+  en: 'Hello, I would like to request information/a quote.',
+  es: 'Hola, me gustaría pedir información/un presupuesto.',
+  fr: "Bonjour, je souhaite demander des informations/un devis.",
+  de: 'Hallo, ich möchte Informationen/ein Angebot anfragen.',
+  it: 'Salve, vorrei richiedere informazioni/un preventivo.',
+};
+
+const SECTION_LABELS: Record<DemoLanguage, { items: string; data: string; details: string; notes: string }> = {
+  pt: { items: 'Itens selecionados', data: 'Dados', details: 'Detalhes', notes: 'Observações' },
+  en: { items: 'Selected items', data: 'Details', details: 'Additional details', notes: 'Notes' },
+  es: { items: 'Elementos seleccionados', data: 'Datos', details: 'Detalles', notes: 'Observaciones' },
+  fr: { items: 'Éléments sélectionnés', data: 'Coordonnées', details: 'Détails', notes: 'Observations' },
+  de: { items: 'Ausgewählte Posten', data: 'Angaben', details: 'Details', notes: 'Anmerkungen' },
+  it: { items: 'Elementi selezionati', data: 'Dati', details: 'Dettagli', notes: 'Note' },
+};
+
+function formatFieldLine(field: QuoteField, value: string): string {
+  const unit = field.unit ? ` ${field.unit}` : '';
+  return `${field.label}: ${value}${unit}`;
+}
+
+export function buildConversionMessage(
+  config: BusinessDemoConfig,
+  selection: SelectedOffering[],
+  globalFieldValues: Record<string, string>,
   visitor: VisitorInfo,
   language: DemoLanguage,
 ): string {
   const strings = getDemoStrings(language);
+  const labels = SECTION_LABELS[language] ?? SECTION_LABELS.pt;
   const lines: string[] = [];
 
-  const greeting =
-    language === 'en'
-      ? 'Hello, I would like to request a quote.'
-      : language === 'es'
-        ? 'Hola, me gustaría pedir un presupuesto.'
-        : language === 'fr'
-          ? 'Bonjour, je souhaite demander un devis.'
-          : language === 'de'
-            ? 'Hallo, ich möchte ein Angebot anfragen.'
-            : language === 'it'
-              ? 'Salve, vorrei richiedere un preventivo.'
-              : 'Olá, gostaria de pedir um orçamento.';
+  lines.push(config.conversion.customMessageIntro || GREETING_BY_LANGUAGE[language] || GREETING_BY_LANGUAGE.pt, '');
 
-  lines.push(greeting, '');
-
-  const companyLabel =
-    language === 'en'
-      ? 'Company'
-      : language === 'es'
-        ? 'Empresa'
-        : language === 'fr'
-          ? 'Entreprise'
-          : language === 'de'
-            ? 'Firma'
-            : language === 'it'
-              ? 'Azienda'
-              : 'Empresa';
-  const serviceLabel =
-    language === 'en'
-      ? 'Service'
-      : language === 'es'
-        ? 'Servicio'
-        : language === 'fr'
-          ? 'Service'
-          : language === 'de'
-            ? 'Leistung'
-            : language === 'it'
-              ? 'Servizio'
-              : 'Serviço';
-
-  lines.push(`${companyLabel}: ${config.companyName}`);
-  lines.push(`${serviceLabel}: ${service.title}`);
-  lines.push('');
-
-  for (const field of service.quoteFields) {
-    const value = fieldValues[field.key]?.trim();
-    if (value) {
-      const unit = field.unit ? ` ${field.unit}` : '';
-      lines.push(`${field.label}: ${value}${unit}`);
+  if (selection.length > 0) {
+    lines.push(`${labels.items}:`);
+    for (const { offering, quantity, fieldValues } of selection) {
+      const qty = offering.quantityEnabled && quantity > 1 ? ` x${quantity}` : '';
+      const price = offering.price ? ` (${offering.priceLabel ?? offering.price})` : '';
+      lines.push(`- ${offering.title}${qty}${price}`);
+      for (const field of offering.quoteFields ?? []) {
+        const value = fieldValues[field.key]?.trim();
+        if (value) lines.push(`  ${formatFieldLine(field, value)}`);
+      }
     }
+    lines.push('');
   }
 
-  lines.push('');
+  lines.push(`${labels.data}:`);
   lines.push(`${strings.name}: ${visitor.name}`);
   lines.push(`${strings.phone}: ${visitor.phone}`);
   if (visitor.email?.trim()) {
     lines.push(`${strings.email}: ${visitor.email.trim()}`);
   }
 
+  const globalFields = config.conversion.globalQuoteFields ?? [];
+  const filledGlobalFields = globalFields.filter((field) => globalFieldValues[field.key]?.trim());
+  if (filledGlobalFields.length > 0) {
+    lines.push('', `${labels.details}:`);
+    for (const field of filledGlobalFields) {
+      lines.push(formatFieldLine(field, globalFieldValues[field.key].trim()));
+    }
+  }
+
   if (visitor.notes?.trim()) {
-    lines.push('');
-    lines.push(`${strings.notes}:`);
-    lines.push(visitor.notes.trim());
+    lines.push('', `${labels.notes}:`, visitor.notes.trim());
   }
 
   return lines.join('\n');
-}
-
-export function resolveAbsoluteUrl(siteUrl: string, pathOrUrl: string): string {
-  if (/^https?:\/\//i.test(pathOrUrl)) {
-    return pathOrUrl;
-  }
-  const normalizedPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
-  return `${siteUrl}${normalizedPath}`;
 }

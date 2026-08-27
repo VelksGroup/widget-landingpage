@@ -18,6 +18,27 @@ interface DemoStrings {
   unavailableTitle: string;
   unavailableBody: string;
   contactUnavailable: string;
+  addToSelection: string;
+  remove: string;
+  quantity: string;
+  total: string;
+  estimated: string;
+  emptySelection: string;
+  openConversionOrder: string;
+  openConversionQuote: string;
+  openConversionBooking: string;
+  openConversionContact: string;
+  openConversionConsultation: string;
+  yourDetails: string;
+  getDirections: string;
+  viewOnMap: string;
+  openingHours: string;
+  faqTitle: string;
+  processTitle: string;
+  benefitsTitle: string;
+  reviewsTitle: string;
+  aboutTitle: string;
+  demoCredit: string;
 }
 
 const STRINGS: Record<DemoLanguage, DemoStrings> = {
@@ -39,6 +60,27 @@ const STRINGS: Record<DemoLanguage, DemoStrings> = {
     unavailableTitle: 'Demonstração indisponível',
     unavailableBody: 'Esta demonstração não está disponível de momento.',
     contactUnavailable: 'Contacto indisponível de momento.',
+    addToSelection: 'Adicionar',
+    remove: 'Remover',
+    quantity: 'Quantidade',
+    total: 'Total',
+    estimated: 'estimado',
+    emptySelection: 'Ainda não escolheu nada. Pode enviar um pedido geral na mesma.',
+    openConversionOrder: 'Ver pedido',
+    openConversionQuote: 'Pedir orçamento',
+    openConversionBooking: 'Marcar',
+    openConversionContact: 'Contactar',
+    openConversionConsultation: 'Pedir consulta',
+    yourDetails: 'Os seus dados',
+    getDirections: 'Obter direções',
+    viewOnMap: 'Ver no mapa',
+    openingHours: 'Horário',
+    faqTitle: 'Perguntas frequentes',
+    processTitle: 'Como funciona',
+    benefitsTitle: 'Porquê escolher-nos',
+    reviewsTitle: 'O que dizem os clientes',
+    aboutTitle: 'Sobre nós',
+    demoCredit: 'Demonstração desenvolvida pela VELKS',
   },
   en: {
     requestQuote: 'Request a quote',
@@ -58,6 +100,27 @@ const STRINGS: Record<DemoLanguage, DemoStrings> = {
     unavailableTitle: 'Demo unavailable',
     unavailableBody: 'This demo is not available right now.',
     contactUnavailable: 'Contact currently unavailable.',
+    addToSelection: 'Add',
+    remove: 'Remove',
+    quantity: 'Quantity',
+    total: 'Total',
+    estimated: 'estimated',
+    emptySelection: "You haven't chosen anything yet. You can still send a general request.",
+    openConversionOrder: 'View order',
+    openConversionQuote: 'Get a quote',
+    openConversionBooking: 'Book now',
+    openConversionContact: 'Contact us',
+    openConversionConsultation: 'Request consultation',
+    yourDetails: 'Your details',
+    getDirections: 'Get directions',
+    viewOnMap: 'View on map',
+    openingHours: 'Opening hours',
+    faqTitle: 'Frequently asked questions',
+    processTitle: 'How it works',
+    benefitsTitle: 'Why choose us',
+    reviewsTitle: 'What clients say',
+    aboutTitle: 'About us',
+    demoCredit: 'Demo built by VELKS',
   },
   es: {
     requestQuote: 'Pedir presupuesto',
@@ -77,6 +140,27 @@ const STRINGS: Record<DemoLanguage, DemoStrings> = {
     unavailableTitle: 'Demostración no disponible',
     unavailableBody: 'Esta demostración no está disponible en este momento.',
     contactUnavailable: 'Contacto no disponible en este momento.',
+    addToSelection: 'Añadir',
+    remove: 'Eliminar',
+    quantity: 'Cantidad',
+    total: 'Total',
+    estimated: 'estimado',
+    emptySelection: 'Aún no ha elegido nada. Puede enviar una solicitud general igualmente.',
+    openConversionOrder: 'Ver pedido',
+    openConversionQuote: 'Pedir presupuesto',
+    openConversionBooking: 'Reservar',
+    openConversionContact: 'Contactar',
+    openConversionConsultation: 'Pedir consulta',
+    yourDetails: 'Sus datos',
+    getDirections: 'Cómo llegar',
+    viewOnMap: 'Ver en el mapa',
+    openingHours: 'Horario',
+    faqTitle: 'Preguntas frecuentes',
+    processTitle: 'Cómo funciona',
+    benefitsTitle: 'Por qué elegirnos',
+    reviewsTitle: 'Lo que dicen los clientes',
+    aboutTitle: 'Sobre nosotros',
+    demoCredit: 'Demostración desarrollada por VELKS',
   },
   fr: {
     requestQuote: 'Demander un devis',
@@ -96,6 +180,27 @@ const STRINGS: Record<DemoLanguage, DemoStrings> = {
     unavailableTitle: 'Démonstration indisponible',
     unavailableBody: "Cette démonstration n'est pas disponible pour le moment.",
     contactUnavailable: 'Contact indisponible pour le moment.',
+    addToSelection: 'Ajouter',
+    remove: 'Retirer',
+    quantity: 'Quantité',
+    total: 'Total',
+    estimated: 'estimé',
+    emptySelection: "Vous n'avez encore rien choisi. Vous pouvez tout de même envoyer une demande générale.",
+    openConversionOrder: 'Voir la commande',
+    openConversionQuote: 'Demander un devis',
+    openConversionBooking: 'Réserver',
+    openConversionContact: 'Contacter',
+    openConversionConsultation: 'Demander une consultation',
+    yourDetails: 'Vos coordonnées',
+    getDirections: "Obtenir l'itinéraire",
+    viewOnMap: 'Voir sur la carte',
+    openingHours: 'Horaires',
+    faqTitle: 'Questions fréquentes',
+    processTitle: 'Comment ça marche',
+    benefitsTitle: 'Pourquoi nous choisir',
+    reviewsTitle: 'Avis clients',
+    aboutTitle: 'À propos',
+    demoCredit: 'Démonstration réalisée par VELKS',
   },
   de: {
     requestQuote: 'Angebot anfordern',
@@ -115,6 +220,27 @@ const STRINGS: Record<DemoLanguage, DemoStrings> = {
     unavailableTitle: 'Demo nicht verfügbar',
     unavailableBody: 'Diese Demo ist derzeit nicht verfügbar.',
     contactUnavailable: 'Kontakt derzeit nicht verfügbar.',
+    addToSelection: 'Hinzufügen',
+    remove: 'Entfernen',
+    quantity: 'Menge',
+    total: 'Gesamt',
+    estimated: 'geschätzt',
+    emptySelection: 'Sie haben noch nichts ausgewählt. Sie können trotzdem eine allgemeine Anfrage senden.',
+    openConversionOrder: 'Bestellung ansehen',
+    openConversionQuote: 'Angebot anfordern',
+    openConversionBooking: 'Termin buchen',
+    openConversionContact: 'Kontaktieren',
+    openConversionConsultation: 'Beratung anfragen',
+    yourDetails: 'Ihre Angaben',
+    getDirections: 'Route anzeigen',
+    viewOnMap: 'Auf der Karte ansehen',
+    openingHours: 'Öffnungszeiten',
+    faqTitle: 'Häufige Fragen',
+    processTitle: 'So funktioniert es',
+    benefitsTitle: 'Warum uns wählen',
+    reviewsTitle: 'Kundenstimmen',
+    aboutTitle: 'Über uns',
+    demoCredit: 'Demo erstellt von VELKS',
   },
   it: {
     requestQuote: 'Richiedi preventivo',
@@ -134,6 +260,27 @@ const STRINGS: Record<DemoLanguage, DemoStrings> = {
     unavailableTitle: 'Demo non disponibile',
     unavailableBody: 'Questa demo non è disponibile al momento.',
     contactUnavailable: 'Contatto non disponibile al momento.',
+    addToSelection: 'Aggiungi',
+    remove: 'Rimuovi',
+    quantity: 'Quantità',
+    total: 'Totale',
+    estimated: 'stimato',
+    emptySelection: 'Non hai ancora scelto nulla. Puoi comunque inviare una richiesta generale.',
+    openConversionOrder: 'Vedi ordine',
+    openConversionQuote: 'Richiedi preventivo',
+    openConversionBooking: 'Prenota',
+    openConversionContact: 'Contattaci',
+    openConversionConsultation: 'Richiedi consulenza',
+    yourDetails: 'I tuoi dati',
+    getDirections: 'Indicazioni stradali',
+    viewOnMap: 'Vedi sulla mappa',
+    openingHours: 'Orari',
+    faqTitle: 'Domande frequenti',
+    processTitle: 'Come funziona',
+    benefitsTitle: 'Perché sceglierci',
+    reviewsTitle: 'Cosa dicono i clienti',
+    aboutTitle: 'Chi siamo',
+    demoCredit: 'Demo realizzata da VELKS',
   },
 };
 

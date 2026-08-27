@@ -38,7 +38,7 @@ async function main() {
 
   let demoRegistry;
   try {
-    const mod = await vite.ssrLoadModule('/src/demo/registry.ts');
+    const mod = await vite.ssrLoadModule('/src/demo/mockdb/index.ts');
     demoRegistry = mod.demoRegistry;
   } finally {
     await vite.close();
