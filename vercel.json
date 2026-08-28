@@ -42,11 +42,11 @@
     },
     {
       "source": "/demo/:slug",
-      "destination": "/api/demo/:slug"
+      "destination": "/api/demo/[slug]"
     },
     {
       "source": "/demo/:slug/",
-      "destination": "/api/demo/:slug"
+      "destination": "/api/demo/[slug]"
     },
     {
       "source": "/(.*)",
