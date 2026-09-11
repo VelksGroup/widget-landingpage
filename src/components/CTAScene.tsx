@@ -6,7 +6,7 @@ import { TiltCard } from './TiltCard';
 
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 
-const stripeCheckoutUrl = "https://book.stripe.com/dRmeVdbV4bCBc2Q7uF2cg00";
+const stripeCheckoutUrl = "https://buy.stripe.com/9B68wP4sC4a9aYM5mx2cg07";
 
 // The original MarqueeContent was not used within the CTAScene component.
 // If it were used, its content would also be extracted for translation.
