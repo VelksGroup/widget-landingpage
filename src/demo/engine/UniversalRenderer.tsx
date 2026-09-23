@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type ElementType } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Award, ChevronDown, Clock, Flame, Heart, Leaf, MapPin, Plus, Shield, ShoppingBag, Star, Users, Zap } from 'lucide-react';
+import { ArrowUpRight, Award, ChevronDown, Clock, Flame, Heart, Leaf, MapPin, Plus, Shield, ShoppingBag, Star, Users, Zap } from 'lucide-react';
 import type { DemoRecord, Offering } from '../types';
 import type { SelectedOffering } from '../utils';
 import { resolveAbsoluteUrl, formatOfferingPrice } from '../utils';
@@ -48,6 +48,7 @@ export function UniversalRenderer({ demo }: { demo: DemoRecord }) {
 
   const heroAsset = assetsOfKind(demo, 'hero')[0];
   const galleryAssets = assetsOfKind(demo, 'gallery');
+  const featuredAsset = assetsOfKind(demo, 'other')[0];
   const logoAsset = assetsOfKind(demo, 'logo')[0];
   const logoSrc = logoAsset?.url ?? demo.identity.logo;
 
@@ -57,6 +58,7 @@ export function UniversalRenderer({ demo }: { demo: DemoRecord }) {
 
   const hasTrust = (demo.proof.trustBadges ?? []).length > 0 || (demo.proof.stats ?? []).length > 0;
   const hasHighlights = (demo.content.highlights ?? []).length > 0;
+  const hasFeaturedLink = Boolean(demo.content.featuredLink);
   const hasOfferings = demo.offerings.length > 0;
   const hasGallery = galleryAssets.length > 0;
   const hasProcess = (demo.content.process ?? []).length > 0;
@@ -66,13 +68,14 @@ export function UniversalRenderer({ demo }: { demo: DemoRecord }) {
   const navLinks = useMemo(() => {
     const links: { id: string; label: string }[] = [];
     if (hasTrust || hasHighlights) links.push({ id: 'sobre', label: 'Sobre' });
+    if (hasFeaturedLink) links.push({ id: 'destaque', label: demo.content.featuredLink?.navLabel || 'Destaque' });
     if (hasProcess) links.push({ id: 'como-funciona', label: strings.processTitle });
     if (hasOfferings) links.push({ id: 'ofertas', label: strings.services });
     if (hasGallery) links.push({ id: 'galeria', label: strings.work });
     links.push({ id: 'contacto', label: 'Contactos' });
     return links;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasTrust, hasHighlights, hasProcess, hasOfferings, hasGallery]);
+  }, [hasTrust, hasHighlights, hasFeaturedLink, hasProcess, hasOfferings, hasGallery, demo.content.featuredLink?.navLabel]);
 
   function handleAdd(offering: Offering) {
     setSelection((prev) => {
@@ -266,6 +269,61 @@ export function UniversalRenderer({ demo }: { demo: DemoRecord }) {
                 </div>
               </>
             )}
+          </div>
+        </section>
+      )}
+
+      {/* DESTAQUE OPCIONAL — curso, catálogo ou recurso externo */}
+      {hasFeaturedLink && demo.content.featuredLink && (
+        <section id="destaque" className="py-24" style={{ backgroundColor: theme.background }}>
+          <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:px-12">
+            {featuredAsset && (
+              <Reveal className="overflow-hidden rounded-3xl border shadow-lg" style={{ borderColor: theme.border }}>
+                <img
+                  src={featuredAsset.url}
+                  alt={demo.content.featuredLink.title}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="aspect-[4/3] h-full w-full object-cover"
+                />
+              </Reveal>
+            )}
+            <Reveal className={featuredAsset ? '' : 'lg:col-span-2 lg:mx-auto lg:max-w-3xl lg:text-center'}>
+              {demo.content.featuredLink.eyebrow && (
+                <span className="mb-4 block text-xs font-medium uppercase tracking-widest" style={{ color: theme.accent }}>
+                  {demo.content.featuredLink.eyebrow}
+                </span>
+              )}
+              <h2 className="font-serif text-4xl font-semibold tracking-tight md:text-5xl">{demo.content.featuredLink.title}</h2>
+              {demo.content.featuredLink.subtitle && (
+                <p className="mt-5 text-xl font-medium">{demo.content.featuredLink.subtitle}</p>
+              )}
+              <p className="mt-5 font-light leading-relaxed" style={{ color: theme.inkMuted }}>
+                {demo.content.featuredLink.description}
+              </p>
+              {(demo.content.featuredLink.points ?? []).length > 0 && (
+                <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                  {demo.content.featuredLink.points!.map((point) => (
+                    <div key={point} className="rounded-2xl border px-4 py-3 text-sm font-medium" style={{ borderColor: theme.border, backgroundColor: theme.surface }}>
+                      {point}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <a
+                href={demo.content.featuredLink.url}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 font-semibold shadow-sm transition-transform hover:scale-[1.02]"
+                style={{ backgroundColor: theme.accent, color: theme.accentInk }}
+              >
+                {demo.content.featuredLink.ctaLabel}
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+              {demo.content.featuredLink.note && (
+                <p className="mt-3 text-sm" style={{ color: theme.inkMuted }}>{demo.content.featuredLink.note}</p>
+              )}
+            </Reveal>
           </div>
         </section>
       )}

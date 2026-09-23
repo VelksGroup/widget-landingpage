@@ -94,12 +94,25 @@ export interface DemoHighlight {
   description: string;
 }
 
+export interface DemoFeaturedLink {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  description: string;
+  points?: string[];
+  ctaLabel: string;
+  url: string;
+  note?: string;
+  navLabel?: string;
+}
+
 export interface DemoContent {
   tagline: string;
   shortDescription?: string;
   advantages?: string[];
   /** Icon+title+description differentiator cards (the Milano "porque escolher-nos" grid). */
   highlights?: DemoHighlight[];
+  featuredLink?: DemoFeaturedLink;
   process?: { title: string; description: string }[];
   faq?: { question: string; answer: string }[];
 }
