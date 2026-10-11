@@ -1,9 +1,37 @@
 import { supabase } from './supabaseClient';
 import type { DemoRecord } from './types';
 
+type LoadStage = 'configuration' | 'site' | 'offerings' | 'assets';
+export type DemoLoadResult =
+  | { kind: 'found'; demo: DemoRecord }
+  | { kind: 'not_found' }
+  | { kind: 'error'; stage: LoadStage; code: string; occurredAt: string; transient: boolean };
+
+type LoadOptions = {
+  client?: typeof supabase;
+  signal?: AbortSignal;
+  retryDelay?: (attempt: number) => Promise<void>;
+};
+
+function loadError(stage: LoadStage, cause: unknown): Extract<DemoLoadResult, { kind: 'error' }> {
+  const raw = cause as { code?: unknown; status?: unknown; message?: unknown } | null;
+  const code = typeof raw?.code === 'string' && /^[A-Za-z0-9_-]{1,40}$/.test(raw.code)
+    ? raw.code
+    : typeof raw?.status === 'number' ? String(raw.status)
+      : cause instanceof TypeError || /fetch|network|timeout/i.test(String(raw?.message ?? ''))
+        ? 'NETWORK_ERROR' : 'UNEXPECTED_ERROR';
+  const transient = code === 'NETWORK_ERROR' || /^08[A-Z0-9]{3}$/.test(code)
+    || ['408', '425', '429', 'PGRST000', 'PGRST001', 'PGRST003'].includes(code)
+    || /^5\d\d$/.test(code);
+  return { kind: 'error', stage, code, occurredAt: new Date().toISOString(), transient };
+}
+
+const defaultRetryDelay = (attempt: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, attempt === 1 ? 300 : 900));
+
 /**
  * Fetches a published demo by slug at runtime (RLS restricts anon reads to
- * status='published'). Returns null for unknown/unpublished/misconfigured.
+ * status='published'). Missing demos and loading failures remain distinct.
  * Kept as three simple queries (not a single PostgREST embed) so it stays
  * easy to reason about without a live project to test complex joins against.
  */
@@ -22,12 +50,12 @@ const MILANO_TERRACE =
 const MILANO_EXTERIOR =
   'https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkXJsAA8jRITfMoZwBTw5P8Gb4eeyUnN3C2gQ4LiIsEByNHxcCMvladDtUQHuUHAuO0I6DkQ1Np86cZQAUdSS1Xw2dWECJvCR4gAneai3lY-vNHtYlMN2dk1tggRM5WGkWqtt-wfQ=s1360-w1360-h1020-rw'; // street/building front — best establishing shot
 
-export async function fetchDemoBySlug(slug: string): Promise<DemoRecord | null> {
+export async function fetchDemoBySlug(slug: string, options: LoadOptions = {}): Promise<DemoLoadResult> {
   if (slug === '__preview') {
     // Temporary reference fixture — Milano's own assets/copy, adapted into the
     // DemoRecord shape, used ONLY to validate the universal template's
     // composition against the real reference before wiring real data sources.
-    return {
+    const demo: DemoRecord = {
       id: 'preview-id',
       slug: '__preview',
       status: 'published',
@@ -124,68 +152,100 @@ export async function fetchDemoBySlug(slug: string): Promise<DemoRecord | null> 
       ],
       enableThree: false,
     };
+    return { kind: 'found', demo };
   }
-  if (!supabase) return null;
+  const client = options.client === undefined ? supabase : options.client;
+  if (!client) {
+    const result = loadError('configuration', { code: 'CONFIG_MISSING' });
+    console.warn('[demo-load]', result);
+    return result;
+  }
 
   // VELKS Demo Factory schema: flat JSONB columns directly on demo_sites (no
   // versioning layer) + demo_offerings as its own table — so a new niche
   // never needs a migration, and offerings can be queried/sorted natively.
-  const { data: site, error: siteError } = await supabase
-    .from('demo_sites')
-    .select('id, slug, status, locale, language, identity, content, contact, proof, accent, conversion, og, enable_three')
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .maybeSingle();
+  async function loadOnce(): Promise<DemoLoadResult> {
+    let siteResult;
+    try {
+      siteResult = await client!.from('demo_sites')
+        .select('id, slug, status, locale, language, identity, content, contact, proof, accent, conversion, og, enable_three')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .maybeSingle();
+    } catch (cause) {
+      return loadError('site', cause);
+    }
+    if (siteResult.error) return loadError('site', siteResult.error);
+    const site = siteResult.data;
+    if (!site) return { kind: 'not_found' };
 
-  if (siteError || !site) return null;
+    const [offeringsResult, assetsResult] = await Promise.allSettled([
+      client!.from('demo_offerings')
+        .select('id, title, description, price, price_label, badge, selectable, quantity_enabled, image_url, quote_fields')
+        .eq('demo_id', site.id)
+        .order('sort_order', { ascending: true }),
+      client!.from('demo_assets')
+        .select('id, kind, url, storage_path, alt, sort_order')
+        .eq('demo_id', site.id)
+        .order('sort_order', { ascending: true }),
+    ]);
+    if (offeringsResult.status === 'rejected') return loadError('offerings', offeringsResult.reason);
+    if (offeringsResult.value.error) return loadError('offerings', offeringsResult.value.error);
+    if (assetsResult.status === 'rejected') return loadError('assets', assetsResult.reason);
+    if (assetsResult.value.error) return loadError('assets', assetsResult.value.error);
+    const offerings = offeringsResult.value.data;
+    const assets = assetsResult.value.data;
+    if (!offerings) return loadError('offerings', { code: 'EMPTY_RESPONSE' });
+    if (!assets) return loadError('assets', { code: 'EMPTY_RESPONSE' });
 
-  const [{ data: offerings }, { data: assets }] = await Promise.all([
-    supabase
-      .from('demo_offerings')
-      .select('id, title, description, price, price_label, badge, selectable, quantity_enabled, image_url, quote_fields')
-      .eq('demo_id', site.id)
-      .order('sort_order', { ascending: true }),
-    supabase
-      .from('demo_assets')
-      .select('id, kind, url, storage_path, alt, sort_order')
-      .eq('demo_id', site.id)
-      .order('sort_order', { ascending: true }),
-  ]);
+    const demo: DemoRecord = {
+      id: site.id,
+      slug: site.slug,
+      status: site.status,
+      locale: site.locale,
+      language: site.language,
+      identity: site.identity,
+      content: site.content,
+      contact: site.contact,
+      proof: site.proof,
+      accent: site.accent,
+      conversion: site.conversion,
+      og: site.og,
+      enableThree: site.enable_three,
+      offerings: offerings.map((o) => ({
+        id: o.id,
+        title: o.title,
+        description: o.description ?? undefined,
+        price: o.price ?? undefined,
+        priceLabel: o.price_label ?? undefined,
+        badge: o.badge ?? undefined,
+        selectable: o.selectable,
+        quantityEnabled: o.quantity_enabled,
+        image: o.image_url ?? undefined,
+        quoteFields: o.quote_fields ?? undefined,
+      })),
+      assets: assets.map((a) => ({
+        id: a.id,
+        kind: a.kind,
+        url: a.url ?? a.storage_path,
+        alt: a.alt ?? '',
+        sortOrder: a.sort_order,
+      })),
+    };
+    return { kind: 'found', demo };
+  }
 
-  return {
-    id: site.id,
-    slug: site.slug,
-    status: site.status,
-    locale: site.locale,
-    language: site.language,
-    identity: site.identity,
-    content: site.content,
-    contact: site.contact,
-    proof: site.proof,
-    accent: site.accent,
-    conversion: site.conversion,
-    og: site.og,
-    enableThree: site.enable_three,
-    offerings: (offerings ?? []).map((o) => ({
-      id: o.id,
-      title: o.title,
-      description: o.description ?? undefined,
-      price: o.price ?? undefined,
-      priceLabel: o.price_label ?? undefined,
-      badge: o.badge ?? undefined,
-      selectable: o.selectable,
-      quantityEnabled: o.quantity_enabled,
-      image: o.image_url ?? undefined,
-      quoteFields: o.quote_fields ?? undefined,
-    })),
-    assets: (assets ?? []).map((a) => ({
-      id: a.id,
-      kind: a.kind,
-      url: a.url ?? a.storage_path,
-      alt: a.alt ?? '',
-      sortOrder: a.sort_order,
-    })),
-  };
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    if (options.signal?.aborted) return loadError('site', { code: 'CANCELLED' });
+    const result = await loadOnce();
+    if (result.kind !== 'error') return result;
+    if (!result.transient || attempt === 3) {
+      if (!options.signal?.aborted) console.warn('[demo-load]', { stage: result.stage, code: result.code, occurredAt: result.occurredAt, attempts: attempt });
+      return result;
+    }
+    await (options.retryDelay ?? defaultRetryDelay)(attempt);
+  }
+  return loadError('site', { code: 'UNEXPECTED_ERROR' });
 }
 
 export async function logDemoEvent(demoId: string, eventType: string, metadata: Record<string, unknown> = {}) {
